@@ -1,621 +1,187 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>日本語 Vocab</title>
+<title>日本語 街角学習</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&family=Inter:wght@300;400;500;600&display=swap');
-:root {
-  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;
-  --accent:#6c8cff;--accent2:#a78bfa;--jp-red:#ff6b6b;--id-teal:#34d399;
-  --text:#e8eaf0;--muted:#7880a0;--glow:rgba(108,140,255,0.12);
-  --green:#34d399;--yellow:#fbbf24;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column}
-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;background:var(--surface);flex-wrap:wrap}
-.logo{font-size:20px;font-family:'Noto Sans JP',sans-serif;font-weight:700;color:var(--accent)}
-.logo span{color:var(--muted);font-weight:300;font-size:12px;margin-left:6px}
-.header-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.badge{font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);padding:3px 9px;border-radius:20px}
-.player-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap}
-.btn:active{transform:scale(.96)}
-.btn-primary{background:var(--accent);color:#fff;box-shadow:0 0 14px rgba(108,140,255,.3)}
-.btn-primary:hover{background:#849aff}
-.btn-primary.playing{background:#ff6b6b;box-shadow:0 0 14px rgba(255,107,107,.3)}
-.btn-outline{background:transparent;color:var(--muted);border:1px solid var(--border)}
-.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
-.btn-outline.on{border-color:var(--accent2);color:var(--accent2);background:rgba(167,139,250,.1)}
-.btn-outline.wakelock{border-color:var(--yellow);color:var(--yellow);background:rgba(251,191,36,.1)}
-.btn-dl{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.3)}
-.btn-dl:hover{background:rgba(52,211,153,.22);border-color:var(--green)}
-.progress-wrap{flex:1;min-width:140px;display:flex;flex-direction:column;gap:3px}
-.progress-label{font-size:11px;color:var(--muted);display:flex;justify-content:space-between}
-.progress-bg{height:3px;background:var(--border);border-radius:3px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .3s;width:0}
-.ctrl-wrap{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
-.ctrl-wrap select,.ctrl-wrap input[type=range]{background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 7px;font-size:11px;cursor:pointer}
-.ctrl-wrap input[type=range]{width:60px;accent-color:var(--accent);padding:0}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);transition:all .2s;flex-shrink:0}
-.status-dot.jp{background:var(--jp-red);box-shadow:0 0 7px var(--jp-red);animation:pulse .8s infinite}
-.status-dot.id{background:var(--id-teal);box-shadow:0 0 7px var(--id-teal);animation:pulse .8s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.engine-bar{padding:7px 20px;display:flex;align-items:center;gap:8px;font-size:11px;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap}
-.engine-label{color:var(--muted)}
-.ebadge{padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600}
-.ebadge.google{background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.3)}
-.ebadge.ws{background:rgba(108,140,255,.15);color:var(--accent);border:1px solid rgba(108,140,255,.3)}
-.ebadge.testing{background:rgba(251,191,36,.15);color:var(--yellow);border:1px solid rgba(251,191,36,.3)}
-.featured-wrap{padding:16px 20px 6px}
-.featured-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:20px;box-shadow:0 0 30px var(--glow);transition:all .3s;flex-wrap:wrap}
-.featured-card.active{border-color:var(--accent);box-shadow:0 0 50px rgba(108,140,255,.18)}
-.feat-main{flex:1;min-width:180px}
-.feat-kanji{font-family:'Noto Sans JP',sans-serif;font-size:44px;font-weight:700;line-height:1.1}
-.feat-hira{font-family:'Noto Sans JP',sans-serif;font-size:16px;color:var(--accent2);margin-top:3px;font-weight:300}
-.feat-romaji{font-size:13px;color:var(--muted);margin-top:1px}
-.feat-div{width:1px;height:60px;background:var(--border);flex-shrink:0}
-.feat-id{text-align:right;min-width:120px}
-.feat-id-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.feat-id-txt{font-size:18px;font-weight:500;color:var(--id-teal)}
-.feat-btns{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
-.btn-speak{padding:7px 12px;border-radius:7px;border:none;cursor:pointer;font-size:11px;font-weight:500;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px;transition:all .15s}
-.btn-speak:active{transform:scale(.95)}
-.btn-speak-jp{background:rgba(255,107,107,.15);color:var(--jp-red);border:1px solid rgba(255,107,107,.3)}
-.btn-speak-jp:hover{background:rgba(255,107,107,.25)}
-.btn-speak-id{background:rgba(52,211,153,.15);color:var(--id-teal);border:1px solid rgba(52,211,153,.3)}
-.btn-speak-id:hover{background:rgba(52,211,153,.25)}
-.toolbar{padding:14px 20px 6px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.toolbar h2{font-size:12px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
-.search-box{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:7px 11px;font-size:12px;color:var(--text);font-family:'Inter',sans-serif;width:180px;outline:none;transition:border-color .15s}
-.search-box:focus{border-color:var(--accent)}
-.search-box::placeholder{color:var(--muted)}
-.toolbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.word-grid{padding:0 20px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
-.word-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 13px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
-.word-card:hover{border-color:var(--accent);background:var(--surface2);transform:translateY(-1px)}
-.word-card.active{border-color:var(--accent);background:var(--surface2);box-shadow:0 0 16px var(--glow)}
-.word-card.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px 0 0 3px}
-.word-num{font-size:10px;color:var(--muted);min-width:22px;text-align:right;flex-shrink:0}
-.word-jp{flex:1;min-width:0}
-.word-kanji{font-family:'Noto Sans JP',sans-serif;font-size:16px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.word-hira{font-family:'Noto Sans JP',sans-serif;font-size:10px;color:var(--accent2);margin-top:1px}
-.word-romaji{font-size:9px;color:var(--muted);margin-top:1px}
-.word-id{font-size:11px;color:var(--id-teal);text-align:right;max-width:120px;line-height:1.3;flex-shrink:0}
-.word-play{width:26px;height:26px;border-radius:50%;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-size:10px}
-.word-play:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+  :root{
+    --sign-blue:#0B5FA5;
+    --sign-blue-dark:#063E6E;
+    --sign-green:#1B7A3D;
+    --sign-green-dark:#0F4E27;
+    --concrete:#EDEAE0;
+    --concrete-line:#D8D4C6;
+    --ink:#1C1C1C;
+    --pole:#8C8C86;
+    --white:#FAFAF7;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      repeating-linear-gradient(90deg, transparent, transparent 78px, rgba(0,0,0,0.02) 78px, rgba(0,0,0,0.02) 80px),
+      var(--concrete);
+    font-family:'Noto Sans JP','Oswald',sans-serif;
+    color:var(--ink);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:36px 16px 48px;
+  }
 
-/* DOWNLOAD MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;padding:16px}
-.modal-overlay.show{display:flex}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:26px;max-width:460px;width:100%;box-shadow:0 0 60px rgba(0,0,0,.6);max-height:90vh;overflow-y:auto}
-.modal h3{font-size:16px;font-weight:600;margin-bottom:14px}
-.modal-section{margin-bottom:16px}
-.modal-section label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:8px}
-.chunk-opts{display:flex;gap:8px;flex-wrap:wrap}
-.chunk-opt{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all .15s}
-.chunk-opt:hover{border-color:var(--accent);color:var(--accent)}
-.chunk-opt.selected{background:var(--accent);color:#fff;border-color:var(--accent)}
-.dl-queue{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:11px;color:var(--muted);line-height:1.7;max-height:120px;overflow-y:auto}
-.modal-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .masthead{text-align:center;margin-bottom:8px;}
+  .masthead .route{
+    display:inline-block;
+    font-family:'Oswald',sans-serif;
+    background:var(--sign-green);
+    color:var(--white);
+    font-weight:600;
+    font-size:12px;
+    letter-spacing:1px;
+    padding:4px 10px;
+    border:2px solid var(--white);
+    outline:2px solid var(--sign-green-dark);
+    border-radius:3px;
+    margin-bottom:14px;
+  }
+  .masthead h1{
+    font-family:'Oswald',sans-serif;
+    font-weight:700;
+    font-size:24px;
+    letter-spacing:0.5px;
+    margin:0 0 6px;
+    color:var(--sign-blue-dark);
+  }
+  .masthead p{
+    font-size:13px;
+    color:#6b6b66;
+    margin:0;
+  }
 
-/* DOWNLOAD PROGRESS */
-.dl-progress-wrap{margin-top:14px;display:none}
-.dl-progress-label{font-size:11px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
-.dl-progress-bg{height:5px;background:var(--border);border-radius:5px;overflow:hidden}
-.dl-progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:5px;transition:width .2s;width:0}
-.dl-files{margin-top:10px;display:flex;flex-direction:column;gap:6px}
-.dl-file-item{display:flex;align-items:center;gap:8px;font-size:11px;padding:6px 10px;background:var(--bg);border-radius:6px;border:1px solid var(--border)}
-.dl-file-item .dl-status{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
-.dl-file-item .dl-status.done{background:rgba(52,211,153,.2);color:var(--green)}
-.dl-file-item .dl-status.pending{background:var(--surface2);color:var(--muted)}
-.dl-file-item .dl-status.active{background:rgba(108,140,255,.2);color:var(--accent);animation:pulse .8s infinite}
-.dl-file-name{flex:1;color:var(--text)}
-.dl-file-size{color:var(--muted)}
+  .signpost{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-top:34px;
+    width:100%;
+    max-width:420px;
+  }
+  .cap{
+    width:16px;height:16px;
+    background:var(--pole);
+    border-radius:50%;
+  }
+  .pole-seg{
+    width:10px;height:26px;
+    background:linear-gradient(90deg,#6b6b66,var(--pole),#6b6b66);
+  }
 
-/* UPLOAD MODAL */
-.dropzone{border:2px dashed var(--border);border-radius:10px;padding:26px;text-align:center;cursor:pointer;transition:all .2s;color:var(--muted);font-size:13px}
-.dropzone:hover,.dropzone.drag{border-color:var(--accent);color:var(--accent);background:rgba(108,140,255,.05)}
-.dropzone input{display:none}
-.csv-preview{margin-top:10px;font-size:11px;color:var(--green);min-height:18px}
+  .arm{
+    position:relative;
+    display:block;
+    text-decoration:none;
+    color:var(--white);
+    width:100%;
+    padding:18px 26px 18px 22px;
+    margin-top:22px;
+    border:4px solid var(--white);
+    outline:3px solid var(--sign-blue-dark);
+    outline-offset:-1px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .arm:active{transform:scale(0.97);}
+  .arm:hover{filter:brightness(1.05);}
 
-.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;z-index:300;transform:translateY(80px);opacity:0;transition:all .3s;max-width:320px}
-.toast.show{transform:translateY(0);opacity:1}
+  .arm.right{
+    background:var(--sign-blue);
+    outline-color:var(--sign-blue-dark);
+    border-radius:6px 32px 32px 6px;
+  }
+  .arm.left{
+    background:var(--sign-green);
+    outline-color:var(--sign-green-dark);
+    border-radius:32px 6px 6px 32px;
+    flex-direction:row-reverse;
+  }
+
+  .arm-text{display:flex;flex-direction:column;gap:2px;}
+  .arm-jp{
+    font-family:'Noto Sans JP',sans-serif;
+    font-weight:700;
+    font-size:19px;
+    letter-spacing:0.5px;
+  }
+  .arm-en{
+    font-family:'Oswald',sans-serif;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    opacity:0.85;
+  }
+  .arm-arrow{
+    font-family:'Oswald',sans-serif;
+    font-size:22px;
+    font-weight:600;
+    flex:none;
+  }
+
+  .base{
+    width:64px;height:14px;
+    background:linear-gradient(180deg,#9a9a92,#6b6b66);
+    border-radius:3px;
+    margin-top:2px;
+  }
+
+  .footnote{
+    margin-top:38px;
+    font-size:12px;
+    color:#8a8a82;
+    text-align:center;
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">日本語 Vocab <span>Nippon Elevator · IT</span></div>
-  <div class="header-right">
-    <span class="badge" id="totalBadge">312 kata</span>
-    <button class="btn btn-outline" onclick="openUpload()">📂 CSV</button>
-    <button class="btn btn-outline" onclick="downloadTemplate()">⬇ Template</button>
+  <div class="masthead">
+    <span class="route">道路 507</span>
+    <h1>日本語 街角学習</h1>
+    <p>進みたい方向を選んでください</p>
   </div>
-</header>
 
-<div class="player-bar">
-  <button class="btn btn-primary" id="btnPlayAll" onclick="togglePlayAll()">
-    <span id="playIcon">▶</span><span id="playLabel">Play All</span>
-  </button>
-  <button class="btn btn-outline" onclick="resetAll()">↺</button>
-  <button class="btn btn-outline" id="btnShuffle" onclick="toggleShuffle()">🔀 Acak</button>
-  <button class="btn btn-outline" id="btnWake" onclick="toggleWakeLock()">🔆 Layar</button>
-  <button class="btn btn-dl" onclick="openDownload()">⬇ MP3</button>
+  <div class="signpost">
+    <div class="cap"></div>
+    <div class="pole-seg"></div>
 
-  <div class="progress-wrap">
-    <div class="progress-label">
-      <span id="nowPlaying">—</span>
-      <span id="progressText">0 / 312</span>
-    </div>
-    <div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
-  </div>
-  <div class="ctrl-wrap">Speed
-    <select id="speedSel">
-      <option value="0.7">0.7×</option><option value="0.85">0.85×</option>
-      <option value="1" selected>1×</option><option value="1.2">1.2×</option>
-    </select>
-  </div>
-  <div class="ctrl-wrap">Jeda <span id="pauseVal">1.5</span>s
-    <input type="range" id="pauseRange" min="0.5" max="4" step="0.5" value="1.5"
-      oninput="document.getElementById('pauseVal').textContent=this.value">
-  </div>
-  <span class="status-dot" id="statusDot"></span>
-</div>
-
-<div class="engine-bar">
-  <span class="engine-label">TTS:</span>
-  <span class="ebadge testing" id="engineJP">🔍 …</span>
-  <span class="engine-label">🇮🇩</span>
-  <span class="ebadge testing" id="engineID">🔍 …</span>
-  <span style="margin-left:auto;color:var(--muted);font-size:10px" id="engineNote"></span>
-</div>
-
-<div class="featured-wrap">
-  <div class="featured-card" id="featCard">
-    <div class="feat-main">
-      <div class="feat-kanji" id="featKanji">日本語</div>
-      <div class="feat-hira" id="featHira">にほんご</div>
-      <div class="feat-romaji" id="featRomaji">nihongo</div>
-    </div>
-    <div class="feat-div"></div>
-    <div class="feat-id">
-      <div class="feat-id-lbl">🇮🇩 Arti</div>
-      <div class="feat-id-txt" id="featId">Bahasa Jepang</div>
-    </div>
-    <div class="feat-btns">
-      <button class="btn-speak btn-speak-jp" onclick="speakJP(curIdx)">🇯🇵 Dengar</button>
-      <button class="btn-speak btn-speak-id" onclick="speakID(curIdx)">🇮🇩 Dengar</button>
-    </div>
-  </div>
-</div>
-
-<div class="toolbar">
-  <h2>Semua Kata</h2>
-  <input class="search-box" type="text" placeholder="Cari kanji / romaji / arti…" oninput="filterWords(this.value)" id="searchBox">
-  <div class="toolbar-right">
-    <span class="badge" id="filteredBadge">312 kata</span>
-  </div>
-</div>
-<div class="word-grid" id="wordGrid"></div>
-
-<!-- DOWNLOAD MODAL -->
-<div class="modal-overlay" id="dlModal" onclick="if(event.target===this&&!dlRunning)closeDL()">
-  <div class="modal">
-    <h3>⬇ Download MP3</h3>
-
-    <div class="modal-section">
-      <label>Sumber kata</label>
-      <div class="chunk-opts" id="sourceOpts">
-        <button class="chunk-opt selected" data-source="filtered" onclick="selectSource(this)">Filter aktif (<span id="filteredCount">312</span> kata)</button>
-        <button class="chunk-opt" data-source="shuffle" onclick="selectSource(this)">🔀 Random baru</button>
-        <button class="chunk-opt" data-source="all" onclick="selectSource(this)">Semua kata</button>
+    <a class="arm right" href="index_sign.html">
+      <div class="arm-text">
+        <span class="arm-jp">街角単語帳</span>
+        <span class="arm-en">street sign vocabulary</span>
       </div>
-    </div>
+      <span class="arm-arrow">→</span>
+    </a>
 
-    <div class="modal-section">
-      <label>Kata per file</label>
-      <div class="chunk-opts" id="chunkOpts">
-        <button class="chunk-opt selected" data-chunk="10" onclick="selectChunk(this)">10</button>
-        <button class="chunk-opt" data-chunk="30" onclick="selectChunk(this)">30</button>
-        <button class="chunk-opt" data-chunk="50" onclick="selectChunk(this)">50</button>
-        <button class="chunk-opt" data-chunk="9999" onclick="selectChunk(this)">Semua</button>
+    <a class="arm left" href="index_renshuu.html">
+      <div class="arm-text">
+        <span class="arm-jp">練習問題</span>
+        <span class="arm-en">practice exercises</span>
       </div>
-    </div>
+      <span class="arm-arrow">←</span>
+    </a>
 
-    <div class="modal-section">
-      <label>Preview file yang akan dibuat</label>
-      <div class="dl-queue" id="dlQueue">—</div>
-    </div>
-
-    <div class="dl-progress-wrap" id="dlProgressWrap">
-      <div class="dl-progress-label">
-        <span id="dlProgressLabel">Generating…</span>
-        <span id="dlProgressPct">0%</span>
-      </div>
-      <div class="dl-progress-bg"><div class="dl-progress-fill" id="dlProgressFill"></div></div>
-      <div class="dl-files" id="dlFiles"></div>
-    </div>
-
-    <div class="modal-btns">
-      <button class="btn btn-primary" id="btnStartDL" onclick="startDownload()">⬇ Generate & Download</button>
-      <button class="btn btn-outline" id="btnCancelDL" onclick="cancelDL()">Batal</button>
-    </div>
+    <div class="pole-seg" style="height:60px;"></div>
+    <div class="base"></div>
   </div>
-</div>
 
-<!-- UPLOAD MODAL -->
-<div class="modal-overlay" id="upModal" onclick="if(event.target===this)closeUpload()">
-  <div class="modal">
-    <h3>📂 Upload CSV</h3>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6">
-      Format: <code style="color:var(--accent2);background:var(--surface2);padding:2px 6px;border-radius:4px">kanji, arti</code> atau <code style="color:var(--accent2);background:var(--surface2);padding:2px 6px;border-radius:4px">kanji, romaji, arti</code><br>
-      Baris pertama = header (di-skip). Duplikat diabaikan.
-    </p>
-    <div class="dropzone" onclick="document.getElementById('csvInput').click()"
-      ondragover="event.preventDefault();this.classList.add('drag')"
-      ondragleave="this.classList.remove('drag')"
-      ondrop="handleDrop(event)">
-      <input type="file" id="csvInput" accept=".csv" onchange="handleFile(this.files[0])">
-      📄 Klik atau seret file CSV
-    </div>
-    <div class="csv-preview" id="csvPreview"></div>
-    <div class="modal-btns">
-      <button class="btn btn-primary" id="btnImport" onclick="importCSV()" style="display:none">✓ Import</button>
-      <button class="btn btn-outline" onclick="closeUpload()">Batal</button>
-    </div>
-  </div>
-</div>
+  <div class="footnote">タップして選択したページへ移動します</div>
 
-<div class="toast" id="toast"></div>
-<audio id="audioPlayer" preload="none"></audio>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lamejs/1.2.1/lame.min.js"></script>
-<script>
-const WORDS = [{"jp": "例外", "hira": "れいがい", "romaji": "reigai", "id": "Pengecualian"}, {"jp": "再現性", "hira": "さいげんせい", "romaji": "saigensei", "id": "Kemampuan direproduksi"}, {"jp": "一覧", "hira": "いちらん", "romaji": "ichiran", "id": "Daftar"}, {"jp": "物理的に", "hira": "ぶつりてきに", "romaji": "butsuriteki ni", "id": "Secara fisik"}, {"jp": "微妙", "hira": "びみょう", "romaji": "bimyou", "id": "Agak kurang cocok"}, {"jp": "タメ口", "hira": "ためくち", "romaji": "tame kuchi", "id": "Bahasa santai"}, {"jp": "宗教", "hira": "しゅうきょう", "romaji": "shuukyou", "id": "Agama"}, {"jp": "下書き", "hira": "したがき", "romaji": "shitagaki", "id": "Draft"}, {"jp": "別件", "hira": "べっけん", "romaji": "bekken", "id": "Urusan lain"}, {"jp": "念のため", "hira": "ねんのため", "romaji": "nennotame", "id": "Untuk berjaga-jaga"}, {"jp": "格納", "hira": "かくのう", "romaji": "kakunou", "id": "Menyimpan data"}, {"jp": "全面禁止", "hira": "ぜんめんきんし", "romaji": "zenmenkinshi", "id": "Larangan total"}, {"jp": "明確", "hira": "めいかく", "romaji": "meikaku", "id": "Jelas"}, {"jp": "開けっ放し", "hira": "ひらけっはなし", "romaji": "hirake tsu hanashi", "id": "Dibiarkan terbuka"}, {"jp": "計画", "hira": "けいかく", "romaji": "keikaku", "id": "Rencana"}, {"jp": "中部", "hira": "ちゅうぶ", "romaji": "chuubu", "id": "Wilayah Chubu"}, {"jp": "並行", "hira": "へいこう", "romaji": "heikou", "id": "Paralel"}, {"jp": "冷え込む", "hira": "ひえこむ", "romaji": "hie komu", "id": "Menjadi dingin"}, {"jp": "参考", "hira": "さんこう", "romaji": "sankou", "id": "Referensi"}, {"jp": "価格", "hira": "かかく", "romaji": "kakaku", "id": "Harga"}, {"jp": "宿る", "hira": "やどる", "romaji": "yadoru", "id": "Bersemayam"}, {"jp": "葬式", "hira": "そうしき", "romaji": "soushiki", "id": "Pemakaman"}, {"jp": "解散", "hira": "かいさん", "romaji": "kaisan", "id": "Bubar"}, {"jp": "末端の人間", "hira": "まったんのにんげん", "romaji": "mattan no ningen", "id": "Orang level bawah"}, {"jp": "天道", "hira": "てんどう", "romaji": "tendou", "id": "Jalan langit"}, {"jp": "宣教師", "hira": "せんきょうし", "romaji": "senkyoushi", "id": "Misionaris"}, {"jp": "上限", "hira": "じょうげん", "romaji": "jougen", "id": "Batas atas"}, {"jp": "ぼちぼち", "hira": "ぼちぼち", "romaji": "bochibochi", "id": "Pelan-pelan"}, {"jp": "補助", "hira": "ほじょ", "romaji": "hojo", "id": "Subsidi"}, {"jp": "通知", "hira": "つうち", "romaji": "tsuuchi", "id": "Notifikasi"}, {"jp": "検証", "hira": "けんしょう", "romaji": "kenshou", "id": "Verifikasi"}, {"jp": "報告書", "hira": "ほうこくしょ", "romaji": "houkokusho", "id": "Laporan"}, {"jp": "点検", "hira": "てんけん", "romaji": "tenken", "id": "Inspeksi"}, {"jp": "定期", "hira": "ていき", "romaji": "teiki", "id": "Berkala"}, {"jp": "判定", "hira": "はんてい", "romaji": "hantei", "id": "Penilaian"}, {"jp": "手前", "hira": "てまえ", "romaji": "temae", "id": "Sebelum"}, {"jp": "手遅れ", "hira": "ておくれ", "romaji": "teokure", "id": "Terlambat ditangani"}, {"jp": "申請", "hira": "しんせい", "romaji": "shinsei", "id": "Pengajuan"}, {"jp": "証明書", "hira": "しょうめいしょ", "romaji": "shoumeisho", "id": "Sertifikat"}, {"jp": "会社員", "hira": "かいしゃいん", "romaji": "kaishain", "id": "Karyawan perusahaan"}, {"jp": "豊穣", "hira": "ほうじょう", "romaji": "houjou", "id": "Kesuburan"}, {"jp": "後発", "hira": "こうはつ", "romaji": "kouhatsu", "id": "Pendatang belakangan"}, {"jp": "空き容量", "hira": "あきようりょう", "romaji": "aki youryou", "id": "Kapasitas kosong"}, {"jp": "残容量", "hira": "ざんようりょう", "romaji": "zan youryou", "id": "Sisa kapasitas"}, {"jp": "容量不足", "hira": "ようりょうぶそく", "romaji": "youryoubusoku", "id": "Kekurangan kapasitas"}, {"jp": "保管", "hira": "ほかん", "romaji": "hokan", "id": "Menyimpan dengan aman"}, {"jp": "保存", "hira": "ほぞん", "romaji": "hozon", "id": "Menyimpan"}, {"jp": "接続先", "hira": "せつぞくさき", "romaji": "setsuzokusaki", "id": "Tujuan koneksi"}, {"jp": "解読", "hira": "かいどく", "romaji": "kaidoku", "id": "Dekode"}, {"jp": "仮想環境", "hira": "かそうかんきょう", "romaji": "kasou kankyou", "id": "Virtual environment"}, {"jp": "仮想基盤", "hira": "かそうきばん", "romaji": "kasou kiban", "id": "Platform virtualisasi"}, {"jp": "仮想サーバー", "hira": "かそうさーばー", "romaji": "kasou saabaa", "id": "Server virtual"}, {"jp": "仮想マシン", "hira": "かそうましん", "romaji": "kasou mashin", "id": "Virtual machine"}, {"jp": "監視", "hira": "かんし", "romaji": "kanshi", "id": "Monitoring"}, {"jp": "障害", "hira": "しょうがい", "romaji": "shougai", "id": "Gangguan"}, {"jp": "除外", "hira": "じょがい", "romaji": "jogai", "id": "Kecualikan"}, {"jp": "対象", "hira": "たいしょう", "romaji": "taishou", "id": "Target"}, {"jp": "検査", "hira": "けんさ", "romaji": "kensa", "id": "Pemeriksaan"}, {"jp": "種別", "hira": "しゅべつ", "romaji": "shubetsu", "id": "Jenis"}, {"jp": "変更", "hira": "へんこう", "romaji": "henkou", "id": "Perubahan"}, {"jp": "制限", "hira": "せいげん", "romaji": "seigen", "id": "Pembatasan"}, {"jp": "適用", "hira": "てきよう", "romaji": "tekiyou", "id": "Penerapan"}, {"jp": "持ち出し", "hira": "もちだし", "romaji": "mochidashi", "id": "Membawa keluar"}, {"jp": "通知先", "hira": "つうちさき", "romaji": "tsuuchi saki", "id": "Tujuan notifikasi"}, {"jp": "構成", "hira": "こうせい", "romaji": "kousei", "id": "Konfigurasi"}, {"jp": "設定", "hira": "せってい", "romaji": "settei", "id": "Pengaturan"}, {"jp": "更新", "hira": "こうしん", "romaji": "koushin", "id": "Update"}, {"jp": "交換", "hira": "こうかん", "romaji": "koukan", "id": "Penggantian"}, {"jp": "移行", "hira": "いこう", "romaji": "ikou", "id": "Migrasi"}, {"jp": "調査", "hira": "ちょうさ", "romaji": "chousa", "id": "Investigasi"}, {"jp": "確認", "hira": "かくにん", "romaji": "kakunin", "id": "Konfirmasi"}, {"jp": "共有", "hira": "きょうゆう", "romaji": "kyouyuu", "id": "Berbagi informasi"}, {"jp": "対応", "hira": "たいおう", "romaji": "taiou", "id": "Penanganan"}, {"jp": "管理", "hira": "かんり", "romaji": "kanri", "id": "Manajemen"}, {"jp": "運用", "hira": "うんよう", "romaji": "unyou", "id": "Operasional"}, {"jp": "削除", "hira": "さくじょ", "romaji": "sakujo", "id": "Hapus"}, {"jp": "追加", "hira": "ついか", "romaji": "tsuika", "id": "Tambah"}, {"jp": "登録", "hira": "とうろく", "romaji": "touroku", "id": "Registrasi"}, {"jp": "解除", "hira": "かいじょ", "romaji": "kaijo", "id": "Batalkan"}, {"jp": "接続", "hira": "せつぞく", "romaji": "setsuzoku", "id": "Koneksi"}, {"jp": "切断", "hira": "せつだん", "romaji": "setsudan", "id": "Putus koneksi"}, {"jp": "障害対応", "hira": "しょうがいたいおう", "romaji": "shougai taiou", "id": "Penanganan gangguan"}, {"jp": "不具合", "hira": "ふぐあい", "romaji": "fuguai", "id": "Malfunction"}, {"jp": "復旧", "hira": "ふっきゅう", "romaji": "fukkyuu", "id": "Pemulihan"}, {"jp": "保守", "hira": "ほしゅ", "romaji": "hoshu", "id": "Maintenance"}, {"jp": "改善", "hira": "かいぜん", "romaji": "kaizen", "id": "Perbaikan"}, {"jp": "稼働", "hira": "かどう", "romaji": "kadou", "id": "Beroperasi"}, {"jp": "停止", "hira": "ていし", "romaji": "teishi", "id": "Berhenti"}, {"jp": "起動", "hira": "きどう", "romaji": "kidou", "id": "Menyalakan"}, {"jp": "再起動", "hira": "さいきどう", "romaji": "saikidou", "id": "Restart"}, {"jp": "終了", "hira": "しゅうりょう", "romaji": "shuuryou", "id": "Shutdown"}, {"jp": "導入", "hira": "どうにゅう", "romaji": "dounyuu", "id": "Implementasi"}, {"jp": "切替", "hira": "きりかえ", "romaji": "kirikae", "id": "Peralihan"}, {"jp": "引継ぎ", "hira": "ひきつぎ", "romaji": "hikitsugi", "id": "Handover"}, {"jp": "依頼", "hira": "いらい", "romaji": "irai", "id": "Permintaan"}, {"jp": "承認", "hira": "しょうにん", "romaji": "shounin", "id": "Persetujuan"}, {"jp": "却下", "hira": "きゃっか", "romaji": "kyakka", "id": "Penolakan"}, {"jp": "提出", "hira": "ていしゅつ", "romaji": "teishutsu", "id": "Menyerahkan"}, {"jp": "受領", "hira": "じゅりょう", "romaji": "juryou", "id": "Penerimaan"}, {"jp": "連絡", "hira": "れんらく", "romaji": "renraku", "id": "Pemberitahuan"}, {"jp": "相談", "hira": "そうだん", "romaji": "soudan", "id": "Konsultasi"}, {"jp": "回答", "hira": "かいとう", "romaji": "kaitou", "id": "Jawaban"}, {"jp": "確認中", "hira": "かくにんなか", "romaji": "kakunin naka", "id": "Sedang dicek"}, {"jp": "調整", "hira": "ちょうせい", "romaji": "chousei", "id": "Koordinasi"}, {"jp": "完了", "hira": "かんりょう", "romaji": "kanryou", "id": "Selesai"}, {"jp": "未完了", "hira": "みかんりょう", "romaji": "mikan ryou", "id": "Belum selesai"}, {"jp": "実施", "hira": "じっし", "romaji": "jisshi", "id": "Pelaksanaan"}, {"jp": "中止", "hira": "ちゅうし", "romaji": "chuushi", "id": "Pembatalan"}, {"jp": "延期", "hira": "えんき", "romaji": "enki", "id": "Penundaan"}, {"jp": "至急", "hira": "しきゅう", "romaji": "shikyuu", "id": "Mendesak"}, {"jp": "重要", "hira": "じゅうよう", "romaji": "juuyou", "id": "Penting"}, {"jp": "緊急", "hira": "きんきゅう", "romaji": "kinkyuu", "id": "Darurat"}, {"jp": "優先", "hira": "ゆうせん", "romaji": "yuusen", "id": "Prioritas"}, {"jp": "原因", "hira": "げんいん", "romaji": "gen'in", "id": "Penyebab"}, {"jp": "結果", "hira": "けっか", "romaji": "kekka", "id": "Hasil"}, {"jp": "影響", "hira": "えいきょう", "romaji": "eikyou", "id": "Dampak"}, {"jp": "対策", "hira": "たいさく", "romaji": "taisaku", "id": "Tindakan penanggulangan"}, {"jp": "現象", "hira": "げんしょう", "romaji": "genshou", "id": "Gejala"}, {"jp": "状況", "hira": "じょうきょう", "romaji": "joukyou", "id": "Situasi"}, {"jp": "利用", "hira": "りよう", "romaji": "riyou", "id": "Penggunaan"}, {"jp": "利用者", "hira": "りようしゃ", "romaji": "riyousha", "id": "Pengguna"}, {"jp": "利用停止", "hira": "りようていし", "romaji": "riyou teishi", "id": "Penghentian penggunaan"}, {"jp": "権限", "hira": "けんげん", "romaji": "kengen", "id": "Hak akses"}, {"jp": "管理者", "hira": "かんりしゃ", "romaji": "kanrisha", "id": "Administrator"}, {"jp": "閲覧", "hira": "えつらん", "romaji": "etsuran", "id": "Melihat"}, {"jp": "編集", "hira": "へんしゅう", "romaji": "henshuu", "id": "Mengedit"}, {"jp": "印刷", "hira": "いんさつ", "romaji": "insatsu", "id": "Mencetak"}, {"jp": "ダウンロード", "hira": "だうんろーど", "romaji": "daunroodo", "id": "Download"}, {"jp": "掲載", "hira": "けいさい", "romaji": "keisai", "id": "Mempublikasikan"}, {"jp": "配布", "hira": "はいふ", "romaji": "haifu", "id": "Distribusi"}, {"jp": "資料", "hira": "しりょう", "romaji": "shiryou", "id": "Dokumen"}, {"jp": "手順書", "hira": "てじゅんしょ", "romaji": "tejunsho", "id": "Panduan prosedur"}, {"jp": "仕様", "hira": "しよう", "romaji": "shiyou", "id": "Spesifikasi"}, {"jp": "要件", "hira": "ようけん", "romaji": "youken", "id": "Requirement"}, {"jp": "機能", "hira": "きのう", "romaji": "kinou", "id": "Fitur"}, {"jp": "環境", "hira": "かんきょう", "romaji": "kankyou", "id": "Environment"}, {"jp": "本番環境", "hira": "ほんばんかんきょう", "romaji": "honban kankyou", "id": "Production environment"}, {"jp": "検証環境", "hira": "けんしょうかんきょう", "romaji": "kenshou kankyou", "id": "Testing environment"}, {"jp": "開発環境", "hira": "かいはつかんきょう", "romaji": "kaihatsukankyou", "id": "Development environment"}, {"jp": "社宅", "hira": "しゃたく", "romaji": "shataku", "id": "Rumah dinas"}, {"jp": "保証金", "hira": "ほしょうきん", "romaji": "hoshoukin", "id": "Deposit"}, {"jp": "引き落とし", "hira": "ひきおとし", "romaji": "hikiotoshi", "id": "Autodebet"}, {"jp": "口座", "hira": "こうざ", "romaji": "kouza", "id": "Rekening"}, {"jp": "口座振替", "hira": "こうざふりかえ", "romaji": "kouzafurikae", "id": "Autodebet rekening"}, {"jp": "電気料金", "hira": "でんきりょうきん", "romaji": "denkiryoukin", "id": "Biaya listrik"}, {"jp": "契約", "hira": "けいやく", "romaji": "keiyaku", "id": "Kontrak"}, {"jp": "請求", "hira": "せいきゅう", "romaji": "seikyuu", "id": "Tagihan"}, {"jp": "請求額", "hira": "せいきゅうがく", "romaji": "seikyuugaku", "id": "Jumlah tagihan"}, {"jp": "利用明細", "hira": "りようめいさい", "romaji": "riyoumeisai", "id": "Rincian penggunaan"}, {"jp": "在留カード", "hira": "ざいりゅうかーど", "romaji": "zairyuu kaado", "id": "Residence card"}, {"jp": "住民票", "hira": "じゅうみんひょう", "romaji": "juuminhyou", "id": "Juminhyou"}, {"jp": "個人番号カード", "hira": "こじんばんごうかーど", "romaji": "kojin bangou kaado", "id": "My Number Card"}, {"jp": "社員証", "hira": "しゃいんしょう", "romaji": "shainshou", "id": "Kartu karyawan"}, {"jp": "経費精算", "hira": "けいひせいさん", "romaji": "keihi seisan", "id": "Klaim biaya"}, {"jp": "会議", "hira": "かいぎ", "romaji": "kaigi", "id": "Rapat"}, {"jp": "登壇", "hira": "とうだん", "romaji": "toudan", "id": "Presentasi"}, {"jp": "見積", "hira": "みつもり", "romaji": "mitsumori", "id": "Estimasi harga"}, {"jp": "情報漏洩", "hira": "じょうほうろうえい", "romaji": "jouhou rouei", "id": "Kebocoran informasi"}, {"jp": "機密情報", "hira": "きみつじょうほう", "romaji": "kimitsujouhou", "id": "Informasi rahasia"}, {"jp": "社内", "hira": "しゃない", "romaji": "shanai", "id": "Internal perusahaan"}, {"jp": "社外", "hira": "しゃがい", "romaji": "shagai", "id": "Eksternal perusahaan"}, {"jp": "総務", "hira": "そうむ", "romaji": "soumu", "id": "General Affairs"}, {"jp": "経理", "hira": "けいり", "romaji": "keiri", "id": "Akuntansi"}, {"jp": "財務", "hira": "ざいむ", "romaji": "zaimu", "id": "Keuangan"}, {"jp": "技術部", "hira": "ぎじゅつぶ", "romaji": "gijutsubu", "id": "Departemen teknik"}, {"jp": "開発室", "hira": "かいはつしつ", "romaji": "kaihatsushitsu", "id": "Divisi pengembangan"}, {"jp": "工場", "hira": "こうじょう", "romaji": "koujou", "id": "Pabrik"}, {"jp": "役員", "hira": "やくいん", "romaji": "yakuin", "id": "Direktur"}, {"jp": "部長", "hira": "ぶちょう", "romaji": "buchou", "id": "Manajer departemen"}, {"jp": "課長", "hira": "かちょう", "romaji": "kachou", "id": "Kepala seksi"}, {"jp": "係長", "hira": "かかりちょう", "romaji": "kakarichou", "id": "Supervisor"}, {"jp": "次長", "hira": "じちょう", "romaji": "jichou", "id": "Wakil manajer"}, {"jp": "執行役員", "hira": "しっこうやくいん", "romaji": "shikkou yakuin", "id": "Executive officer"}, {"jp": "承知しました", "hira": "しょうちしました", "romaji": "shouchi shimashita", "id": "Saya mengerti"}, {"jp": "了解", "hira": "りょうかい", "romaji": "ryoukai", "id": "Paham"}, {"jp": "確認済み", "hira": "かくにんずみみ", "romaji": "kakuninzumi mi", "id": "Sudah diperiksa"}, {"jp": "ご教示", "hira": "ごきょうじ", "romaji": "go kyouji", "id": "Mohon informasi"}, {"jp": "素材", "hira": "そざい", "romaji": "sozai", "id": "Bahan material"}, {"jp": "中毒", "hira": "ちゅうどく", "romaji": "chuudoku", "id": "Kecanduan"}, {"jp": "届く", "hira": "とどく", "romaji": "todoku", "id": "Diterima"}, {"jp": "取っておく", "hira": "とっておく", "romaji": "totsu teoku", "id": "Menyimpan untuk nanti"}, {"jp": "試験", "hira": "しけん", "romaji": "shiken", "id": "Pengujian"}, {"jp": "進捗", "hira": "しんちょく", "romaji": "shinchoku", "id": "Progres"}, {"jp": "予定", "hira": "よてい", "romaji": "yotei", "id": "Jadwal"}, {"jp": "監査", "hira": "かんさ", "romaji": "kansa", "id": "Audit"}, {"jp": "認証", "hira": "にんしょう", "romaji": "ninshou", "id": "Otentikasi"}, {"jp": "暗号", "hira": "あんごう", "romaji": "angou", "id": "Enkripsi"}, {"jp": "届出", "hira": "とどけで", "romaji": "todokede", "id": "Pemberitahuan resmi"}, {"jp": "印鑑", "hira": "いんかん", "romaji": "inkan", "id": "Stempel pribadi"}, {"jp": "保険証", "hira": "ほけんしょう", "romaji": "hokenshou", "id": "Kartu asuransi"}, {"jp": "年金", "hira": "ねんきん", "romaji": "nenkin", "id": "Pensiun"}, {"jp": "税金", "hira": "ぜいきん", "romaji": "zeikin", "id": "Pajak"}, {"jp": "詳細", "hira": "しょうさい", "romaji": "shousai", "id": "Detail"}, {"jp": "延長", "hira": "えんちょう", "romaji": "enchou", "id": "Perpanjangan"}, {"jp": "稟議書", "hira": "りんぎしょ", "romaji": "ringisho", "id": "Dokumen approval"}, {"jp": "企業", "hira": "きぎょう", "romaji": "kigyou", "id": "Perusahaan"}, {"jp": "申し込み", "hira": "もうしこみ", "romaji": "moushikomi", "id": "Pengajuan / Pendaftaran"}, {"jp": "打ち合わせ", "hira": "うちあわせ", "romaji": "uchiawase", "id": "Meeting"}, {"jp": "定まる", "hira": "さだまる", "romaji": "sadama ru", "id": "Menjadi pasti"}, {"jp": "感触", "hira": "かんしょく", "romaji": "kanshoku", "id": "Kesan / Feeling"}, {"jp": "踏まえて", "hira": "ふまえて", "romaji": "fuma ete", "id": "Berdasarkan"}, {"jp": "待機", "hira": "たいき", "romaji": "taiki", "id": "Standby"}, {"jp": "修正", "hira": "しゅうせい", "romaji": "shuusei", "id": "Revisi"}, {"jp": "修正済み", "hira": "しゅうせいずみみ", "romaji": "shuuseizumi mi", "id": "Sudah direvisi"}, {"jp": "改修", "hira": "かいしゅう", "romaji": "kaishuu", "id": "Perbaikan sistem"}, {"jp": "改造済み", "hira": "かいぞうすみ", "romaji": "kaizou sumi", "id": "Sudah dimodifikasi"}, {"jp": "公開", "hira": "こうかい", "romaji": "koukai", "id": "Publish"}, {"jp": "公開日", "hira": "こうかいび", "romaji": "koukaibi", "id": "Tanggal rilis"}, {"jp": "最終調整", "hira": "さいしゅうちょうせい", "romaji": "saishuu chousei", "id": "Finalisasi"}, {"jp": "構築", "hira": "こうちく", "romaji": "kouchiku", "id": "Build / Membangun"}, {"jp": "開発", "hira": "かいはつ", "romaji": "kaihatsu", "id": "Development"}, {"jp": "ルーター", "hira": "るーたー", "romaji": "ruutaa", "id": "Router"}, {"jp": "スイッチ", "hira": "すいっち", "romaji": "suitchi", "id": "Switch"}, {"jp": "光ケーブル", "hira": "ひかりけーぶる", "romaji": "hikari keeburu", "id": "Kabel fiber optik"}, {"jp": "同軸ケーブル", "hira": "どうじくけーぶる", "romaji": "doujiku keeburu", "id": "Kabel koaksial"}, {"jp": "ファイアウォール", "hira": "ふぁいあうぉーる", "romaji": "faiauooru", "id": "Firewall"}, {"jp": "ゲートウェイ", "hira": "げーとうぇい", "romaji": "geetouei", "id": "Gateway"}, {"jp": "帯域", "hira": "たいいき", "romaji": "taiiki", "id": "Bandwidth"}, {"jp": "冗長化", "hira": "じょうちょうか", "romaji": "jouchouka", "id": "Redundansi"}, {"jp": "負荷分散", "hira": "ふかぶんさん", "romaji": "fukabunsan", "id": "Load balancing"}, {"jp": "仮想化", "hira": "かそうか", "romaji": "kasouka", "id": "Virtualisasi"}, {"jp": "経路", "hira": "けいろ", "romaji": "keiro", "id": "Route / Jalur"}, {"jp": "通信", "hira": "つうしん", "romaji": "tsuushin", "id": "Komunikasi"}, {"jp": "恐れ入ります", "hira": "おそれいります", "romaji": "osore iri masu", "id": "Mohon maaf merepotkan"}, {"jp": "かしこまりました", "hira": "かしこまりました", "romaji": "kashikomarimashita", "id": "Saya pahami (formal)"}, {"jp": "ご確認ください", "hira": "ごかくにんください", "romaji": "go kakunin kudasai", "id": "Mohon dikonfirmasi"}, {"jp": "ご教示ください", "hira": "ごきょうじください", "romaji": "go kyouji kudasai", "id": "Mohon informasinya"}, {"jp": "ご連絡ください", "hira": "ごれんらくください", "romaji": "go renraku kudasai", "id": "Mohon hubungi kami"}, {"jp": "お手数ですが", "hira": "おてすうですが", "romaji": "o tesuu desuga", "id": "Mohon maaf merepotkan"}, {"jp": "よろしくお願いいたします", "hira": "よろしくおねがいいたします", "romaji": "yoroshikuo negai itashimasu", "id": "Mohon kerjasamanya"}, {"jp": "添付いたします", "hira": "てんぷいたします", "romaji": "tenpu itashimasu", "id": "Saya lampirkan"}, {"jp": "添付資料", "hira": "てんぷしりょう", "romaji": "tenpushiryou", "id": "Dokumen terlampir"}, {"jp": "ご査収ください", "hira": "ごさしゅうください", "romaji": "go sashuu kudasai", "id": "Mohon diterima"}, {"jp": "引き続き", "hira": "ひきつづき", "romaji": "hikitsuzuki", "id": "Selanjutnya / Terus"}, {"jp": "ややこしい", "hira": "ややこしい", "romaji": "yayakoshii", "id": "Rumit / Membingungkan"}, {"jp": "難しい", "hira": "むずかしい", "romaji": "muzukashii", "id": "Sulit"}, {"jp": "簡単", "hira": "かんたん", "romaji": "kantan", "id": "Mudah"}, {"jp": "複雑", "hira": "ふくざつ", "romaji": "fukuzatsu", "id": "Kompleks"}, {"jp": "中途半端", "hira": "ちゅうとはんぱ", "romaji": "chuutohanpa", "id": "Setengah-setengah"}, {"jp": "一応", "hira": "いちおう", "romaji": "ichiou", "id": "Sekadar / Untuk sementara"}, {"jp": "一旦", "hira": "いったん", "romaji": "ittan", "id": "Untuk sementara / Sebentar"}, {"jp": "そんな感じ", "hira": "そんなかんじ", "romaji": "sonna kanji", "id": "Seperti itu"}, {"jp": "違法", "hira": "いほう", "romaji": "ihou", "id": "Ilegal"}, {"jp": "威嚇", "hira": "いかく", "romaji": "ikaku", "id": "Intimidasi"}, {"jp": "嫌がらせ", "hira": "いやがらせ", "romaji": "iyagarase", "id": "Pelecehan"}, {"jp": "ハラスメント", "hira": "はらすめんと", "romaji": "harasumento", "id": "Harassment"}, {"jp": "舌打ち", "hira": "したうち", "romaji": "shitauchi", "id": "Berdecak"}, {"jp": "雰囲気", "hira": "ふんいき", "romaji": "fun'iki", "id": "Suasana / Atmosfer"}, {"jp": "印象", "hira": "いんしょう", "romaji": "inshou", "id": "Kesan"}, {"jp": "感想", "hira": "かんそう", "romaji": "kansou", "id": "Pendapat / Kesan"}, {"jp": "感じ", "hira": "かんじ", "romaji": "kanji", "id": "Perasaan / Kesan"}, {"jp": "様子", "hira": "ようす", "romaji": "yousu", "id": "Kondisi / Situasi"}, {"jp": "作業", "hira": "さぎょう", "romaji": "sagyou", "id": "Pekerjaan / Task"}, {"jp": "作業内容", "hira": "さぎょうないよう", "romaji": "sagyounaiyou", "id": "Isi pekerjaan"}, {"jp": "作業完了", "hira": "さぎょうかんりょう", "romaji": "sagyou kanryou", "id": "Pekerjaan selesai"}, {"jp": "作業中", "hira": "さぎょうちゅう", "romaji": "sagyouchuu", "id": "Sedang mengerjakan"}, {"jp": "作業予定", "hira": "さぎょうよてい", "romaji": "sagyou yotei", "id": "Rencana pekerjaan"}, {"jp": "マニュアル", "hira": "まにゅある", "romaji": "manyuaru", "id": "Manual"}, {"jp": "更新履歴", "hira": "こうしんりれき", "romaji": "koushin rireki", "id": "Riwayat update"}, {"jp": "リリース", "hira": "りりーす", "romaji": "ririisu", "id": "Rilis"}, {"jp": "開始", "hira": "かいし", "romaji": "kaishi", "id": "Mulai"}, {"jp": "実行", "hira": "じっこう", "romaji": "jikkou", "id": "Eksekusi / Jalankan"}, {"jp": "設置", "hira": "せっち", "romaji": "setchi", "id": "Instalasi / Pemasangan"}, {"jp": "撤去", "hira": "てっきょ", "romaji": "tekkyo", "id": "Pembongkaran"}, {"jp": "取り外し", "hira": "とりはずし", "romaji": "torihazushi", "id": "Pelepasan / Pembongkaran"}, {"jp": "組織", "hira": "そしき", "romaji": "soshiki", "id": "Organisasi"}, {"jp": "組織図", "hira": "そしきず", "romaji": "soshikizu", "id": "Bagan organisasi"}, {"jp": "新組織", "hira": "しんそしき", "romaji": "shinsoshiki", "id": "Organisasi baru"}, {"jp": "部署", "hira": "ぶしょ", "romaji": "busho", "id": "Departemen"}, {"jp": "部門", "hira": "ぶもん", "romaji": "bumon", "id": "Divisi"}, {"jp": "課", "hira": "か", "romaji": "ka", "id": "Seksi"}, {"jp": "係", "hira": "かかり", "romaji": "kakari", "id": "Subseksi"}, {"jp": "統括", "hira": "とうかつ", "romaji": "toukatsu", "id": "Mengelola / Supervisi"}, {"jp": "本社", "hira": "ほんしゃ", "romaji": "honsha", "id": "Kantor pusat"}, {"jp": "支店", "hira": "してん", "romaji": "shiten", "id": "Cabang"}, {"jp": "営業所", "hira": "えいぎょうしょ", "romaji": "eigyousho", "id": "Kantor penjualan"}, {"jp": "保全部", "hira": "ほぜんぶ", "romaji": "hozen bu", "id": "Departemen pemeliharaan"}, {"jp": "製造部", "hira": "せいぞうぶ", "romaji": "seizoubu", "id": "Departemen manufaktur"}, {"jp": "人事", "hira": "じんじ", "romaji": "jinji", "id": "HRD"}, {"jp": "社員番号", "hira": "しゃいんばんごう", "romaji": "shainbangou", "id": "Nomor karyawan"}, {"jp": "サーバー", "hira": "さーばー", "romaji": "saabaa", "id": "Server"}, {"jp": "ノード", "hira": "のーど", "romaji": "noodo", "id": "Node"}, {"jp": "クラスター", "hira": "くらすたー", "romaji": "kurasutaa", "id": "Cluster"}, {"jp": "ラック", "hira": "らっく", "romaji": "rakku", "id": "Rack"}, {"jp": "ストレージ", "hira": "すとれーじ", "romaji": "sutoreeji", "id": "Storage"}, {"jp": "スナップショット", "hira": "すなっぷしょっと", "romaji": "sunappushotto", "id": "Snapshot"}, {"jp": "バックアップ", "hira": "ばっくあっぷ", "romaji": "bakkuappu", "id": "Backup"}, {"jp": "復元", "hira": "ふくげん", "romaji": "fukugen", "id": "Restore"}, {"jp": "ファームウェア", "hira": "ふぁーむうぇあ", "romaji": "faamuuea", "id": "Firmware"}, {"jp": "議題", "hira": "ぎだい", "romaji": "gidai", "id": "Agenda"}, {"jp": "議事録", "hira": "ぎじろく", "romaji": "gijiroku", "id": "Notulen"}, {"jp": "説明", "hira": "せつめい", "romaji": "setsumei", "id": "Penjelasan"}, {"jp": "発表", "hira": "はっぴょう", "romaji": "happyou", "id": "Presentasi"}, {"jp": "質問", "hira": "しつもん", "romaji": "shitsumon", "id": "Pertanyaan"}, {"jp": "意見", "hira": "いけん", "romaji": "iken", "id": "Pendapat"}, {"jp": "検討する", "hira": "けんとうする", "romaji": "kentousu ru", "id": "Mempertimbangkan"}, {"jp": "作成する", "hira": "さくせいする", "romaji": "sakusei suru", "id": "Membuat"}, {"jp": "政治", "hira": "せいじ", "romaji": "seiji", "id": "Politik"}, {"jp": "人種", "hira": "じんしゅ", "romaji": "jinshu", "id": "Ras"}, {"jp": "舗装", "hira": "ほそう", "romaji": "hosou", "id": "Aspal"}, {"jp": "避難訓練", "hira": "ひなんくんれん", "romaji": "hinankunren", "id": "Latihan evakuasi"}, {"jp": "手当", "hira": "てあて", "romaji": "teate", "id": "Tunjangan"}, {"jp": "給与", "hira": "きゅうよ", "romaji": "kyuuyo", "id": "Gaji"}, {"jp": "面談", "hira": "めんだん", "romaji": "mendan", "id": "Meeting 1-on-1"}, {"jp": "等級", "hira": "とうきゅう", "romaji": "toukyuu", "id": "Grade / Tingkat"}, {"jp": "昇給", "hira": "しょうきゅう", "romaji": "shoukyuu", "id": "Kenaikan gaji"}, {"jp": "昇格", "hira": "しょうかく", "romaji": "shoukaku", "id": "Promosi"}, {"jp": "決裁", "hira": "けっさい", "romaji": "kessai", "id": "Persetujuan akhir"}, {"jp": "締切", "hira": "しめきり", "romaji": "shimekiri", "id": "Deadline"}, {"jp": "期限", "hira": "きげん", "romaji": "kigen", "id": "Batas waktu"}, {"jp": "優先順位", "hira": "ゆうせんじゅんい", "romaji": "yuusenjun'i", "id": "Urutan prioritas"}, {"jp": "課題", "hira": "かだい", "romaji": "kadai", "id": "Isu / Tantangan"}];
-let words=[...WORDS], filteredIdx=words.map((_,i)=>i);
-let curIdx=0,isPlaying=false,stopFlag=false;
-let shuffleOn=false,wakeLock=null,silentCtx=null,silentTimer=null;
-let pendingCSV=[], useGoogleJP=false, useGoogleID=false;
-let voiceJP=null, voiceID=null;
-let dlRunning=false, dlStop=false;
-let dlChunk=10, dlSource='filtered';
-const audio=document.getElementById('audioPlayer');
-
-// ── GOOGLE TTS ──
-function gUrl(text,lang){return`https://translate.googleapis.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=${lang}&client=gtx&ttsspeed=0.9`;}
-async function testGoogle(){
-  useGoogleJP=await testAudio(gUrl('テスト','ja'));
-  useGoogleID=await testAudio(gUrl('tes','id'));
-  updateEngineUI();
-}
-function testAudio(url){return new Promise(r=>{const a=new Audio(),t=setTimeout(()=>{a.src='';r(false);},4000);a.oncanplaythrough=()=>{clearTimeout(t);a.src='';r(true);};a.onerror=()=>{clearTimeout(t);r(false);};a.src=url;a.load();});}
-function updateEngineUI(){
-  const setB=(id,ok,lang)=>{const e=document.getElementById(id);e.className='ebadge '+(ok?'google':'ws');e.textContent=ok?`${lang} Google TTS ✓`:`${lang} Web Speech`;};
-  setB('engineJP',useGoogleJP,'🇯🇵'); setB('engineID',useGoogleID,'🇮🇩');
-  document.getElementById('engineNote').textContent=(useGoogleJP||useGoogleID)?'<audio> element → background stabil':'Web Speech → background terbatas';
-  if(useGoogleJP||useGoogleID) setupMediaSession();
-}
-function initWSVoices(){if(typeof speechSynthesis==='undefined')return;const l=()=>{const v=speechSynthesis.getVoices();voiceJP=v.find(x=>x.lang==='ja-JP'&&x.name.includes('Google'))||v.find(x=>x.lang==='ja-JP')||v.find(x=>x.lang.startsWith('ja'));voiceID=v.find(x=>x.lang==='id-ID'&&x.name.includes('Google'))||v.find(x=>x.lang==='id-ID')||v.find(x=>x.lang.startsWith('id'));};speechSynthesis.onvoiceschanged=l;l();}
-
-// ── SPEAK ──
-function playAudio(url,rate){return new Promise((res,rej)=>{audio.src=url;audio.playbackRate=rate||1;audio.onended=res;audio.onerror=()=>rej(new Error('err'));audio.play().catch(rej);});}
-function wsSpeech(text,voice,lang,rate){return new Promise(res=>{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);if(voice)u.voice=voice;u.lang=lang;u.rate=rate||1;u.onend=res;u.onerror=res;speechSynthesis.speak(u);});}
-async function speakText(text,lang,isJP){
-  const rate=parseFloat(document.getElementById('speedSel').value);
-  if(isJP?useGoogleJP:useGoogleID){try{await playAudio(gUrl(text,lang),rate);return;}catch(e){}}
-  await wsSpeech(text,isJP?voiceJP:voiceID,lang,rate);
-}
-function speakJP(i){setDot('jp');speakText(words[i].jp,'ja',true).then(()=>setDot(''));}
-function speakID(i){setDot('id');speakText(words[i].id,'id',false).then(()=>setDot(''));}
-function setDot(t){document.getElementById('statusDot').className='status-dot '+t;}
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-
-// ── MEDIA SESSION ──
-function setupMediaSession(){if(!('mediaSession' in navigator))return;navigator.mediaSession.setActionHandler('play',()=>{if(!isPlaying)togglePlayAll();});navigator.mediaSession.setActionHandler('pause',()=>{if(isPlaying)togglePlayAll();});navigator.mediaSession.setActionHandler('nexttrack',()=>{const p=filteredIdx.indexOf(curIdx);if(p<filteredIdx.length-1)setFeatured(filteredIdx[p+1]);});navigator.mediaSession.setActionHandler('previoustrack',()=>{const p=filteredIdx.indexOf(curIdx);if(p>0)setFeatured(filteredIdx[p-1]);});}
-function updateMS(w){if(!('mediaSession' in navigator))return;navigator.mediaSession.metadata=new MediaMetadata({title:w.jp,artist:w.hira+' · '+w.romaji,album:w.id});}
-
-// ── WAKE LOCK ──
-async function toggleWakeLock(){const b=document.getElementById('btnWake');if(wakeLock){try{await wakeLock.release();}catch(e){}wakeLock=null;stopSilent();b.classList.remove('wakelock');b.textContent='🔆 Layar';}else{try{if('wakeLock' in navigator){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null;b.classList.remove('wakelock');b.textContent='🔆 Layar';});}}catch(e){showToast('Wake Lock tidak tersedia');}if(!useGoogleJP&&!useGoogleID)startSilent();b.classList.add('wakelock');b.textContent='🔆 Aktif ✓';}}
-function startSilent(){try{silentCtx=new(window.AudioContext||window.webkitAudioContext)();const buf=silentCtx.createBuffer(1,silentCtx.sampleRate*.5,silentCtx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*.00002-.00001;silentTimer=setInterval(()=>{if(!silentCtx)return;const s=silentCtx.createBufferSource();s.buffer=buf;s.connect(silentCtx.destination);s.start();},3000);}catch(e){}}
-function stopSilent(){if(silentTimer){clearInterval(silentTimer);silentTimer=null;}if(silentCtx){silentCtx.close();silentCtx=null;}}
-document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'&&isPlaying&&!wakeLock){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen');}catch(e){}}});
-
-// ── SHUFFLE ──
-function toggleShuffle(){shuffleOn=!shuffleOn;const b=document.getElementById('btnShuffle');b.classList.toggle('on',shuffleOn);b.textContent=shuffleOn?'🔀 Acak ✓':'🔀 Acak';}
-function buildQueue(src){let q=src?[...src]:[...filteredIdx];if(shuffleOn){for(let i=q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q[i],q[j]]=[q[j],q[i]];}}return q;}
-
-// ── PLAY ALL ──
-async function togglePlayAll(){
-  if(isPlaying){stopFlag=true;isPlaying=false;audio.pause();speechSynthesis?.cancel();setPlayBtn(false);setDot('');return;}
-  isPlaying=true;stopFlag=false;setPlayBtn(true);
-  if(!silentCtx&&!useGoogleJP&&!useGoogleID)startSilent();
-  const pause=parseFloat(document.getElementById('pauseRange').value);
-  const rate=parseFloat(document.getElementById('speedSel').value);
-  const queue=buildQueue();
-  for(let pi=0;pi<queue.length;pi++){
-    if(stopFlag)break;
-    const i=queue[pi];setFeatured(i);
-    const w=words[i];updateMS(w);
-    document.getElementById('progressFill').style.width=((pi+1)/queue.length*100)+'%';
-    document.getElementById('progressText').textContent=`${pi+1}/${queue.length}${shuffleOn?' 🔀':''}`;
-    document.getElementById('nowPlaying').textContent=w.jp+' · '+w.id;
-    setDot('jp');
-    try{await speakText(w.jp,'ja',true);}catch(e){}
-    if(stopFlag)break;await sleep(350);if(stopFlag)break;
-    try{await speakText(w.jp,'ja',true);}catch(e){}
-    if(stopFlag)break;await sleep(pause*1000);if(stopFlag)break;
-    setDot('id');
-    try{await speakText(w.id,'id',false);}catch(e){}
-    if(stopFlag)break;await sleep(350);if(stopFlag)break;
-    try{await speakText(w.id,'id',false);}catch(e){}
-    if(stopFlag)break;await sleep(pause*1200);
-  }
-  if(!stopFlag)document.getElementById('nowPlaying').textContent='✓ Selesai!';
-  isPlaying=false;stopFlag=false;setPlayBtn(false);setDot('');
-}
-function setPlayBtn(p){document.getElementById('playIcon').textContent=p?'⏸':'▶';document.getElementById('playLabel').textContent=p?'Pause':'Play All';document.getElementById('btnPlayAll').classList.toggle('playing',p);}
-function resetAll(){stopFlag=true;isPlaying=false;audio.pause();speechSynthesis?.cancel();setPlayBtn(false);setDot('');setFeatured(filteredIdx[0]??0);document.getElementById('nowPlaying').textContent='—';document.getElementById('progressFill').style.width='0';document.getElementById('progressText').textContent=`0 / ${words.length}`;}
-
-// ── FEATURED ──
-function setFeatured(i){curIdx=i;const w=words[i];document.getElementById('featKanji').textContent=w.jp;document.getElementById('featHira').textContent=w.hira;document.getElementById('featRomaji').textContent=w.romaji;document.getElementById('featId').textContent=w.id;document.getElementById('featCard').classList.add('active');document.querySelectorAll('.word-card').forEach(c=>c.classList.remove('active'));const card=document.querySelector(`.word-card[data-i="${i}"]`);if(card){card.classList.add('active');card.scrollIntoView({behavior:'smooth',block:'nearest'});}}
-
-// ── GRID ──
-function buildGrid(indices){const g=document.getElementById('wordGrid');g.innerHTML='';indices.forEach(i=>{const w=words[i];const c=document.createElement('div');c.className='word-card'+(i===curIdx?' active':'');c.dataset.i=i;c.innerHTML=`<div class="word-num">${i+1}</div><div class="word-jp"><div class="word-kanji">${w.jp}</div><div class="word-hira">${w.hira}</div><div class="word-romaji">${w.romaji}</div></div><div class="word-id">${w.id}</div><button class="word-play" onclick="playCard(event,${i})">▶</button>`;c.addEventListener('click',e=>{if(!e.target.classList.contains('word-play'))setFeatured(i);});g.appendChild(c);});document.getElementById('filteredBadge').textContent=indices.length+' kata';document.getElementById('totalBadge').textContent=words.length+' kata';}
-async function playCard(e,i){e.stopPropagation();setFeatured(i);const w=words[i];setDot('jp');await speakText(w.jp,'ja',true);await sleep(500);setDot('id');await speakText(w.id,'id',false);setDot('');}
-function filterWords(q){q=q.toLowerCase().trim();filteredIdx=q?words.reduce((a,w,i)=>{if(w.jp.includes(q)||w.hira.includes(q)||w.romaji.toLowerCase().includes(q)||w.id.toLowerCase().includes(q))a.push(i);return a;},[]):words.map((_,i)=>i);buildGrid(filteredIdx);updateDLPreview();}
-
-// ══════════════════════════════════════════
-// ── DOWNLOAD MP3 ──
-// ══════════════════════════════════════════
-function openDownload(){
-  updateDLPreview();
-  document.getElementById('dlProgressWrap').style.display='none';
-  document.getElementById('dlFiles').innerHTML='';
-  document.getElementById('btnStartDL').style.display='inline-flex';
-  document.getElementById('dlModal').classList.add('show');
-}
-function closeDL(){if(!dlRunning)document.getElementById('dlModal').classList.remove('show');}
-
-function selectSource(btn){
-  document.querySelectorAll('#sourceOpts .chunk-opt').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); dlSource=btn.dataset.source; updateDLPreview();
-}
-function selectChunk(btn){
-  document.querySelectorAll('#chunkOpts .chunk-opt').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); dlChunk=parseInt(btn.dataset.chunk); updateDLPreview();
-}
-
-function getDLQueue(){
-  let src;
-  if(dlSource==='all') src=words.map((_,i)=>i);
-  else if(dlSource==='shuffle'){src=[...filteredIdx];for(let i=src.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[src[i],src[j]]=[src[j],src[i]];}}
-  else src=[...filteredIdx];
-  // split into chunks
-  const chunks=[];
-  for(let i=0;i<src.length;i+=dlChunk) chunks.push(src.slice(i,i+dlChunk));
-  return {src, chunks};
-}
-
-function updateDLPreview(){
-  document.getElementById('filteredCount').textContent=filteredIdx.length;
-  const {chunks}=getDLQueue();
-  const lines=chunks.map((c,i)=>`📁 vocab_${String(i+1).padStart(2,'0')}.mp3 — ${c.length} kata`);
-  document.getElementById('dlQueue').innerHTML=lines.join('<br>')||'(tidak ada kata)';
-}
-
-// Fetch audio as ArrayBuffer
-async function fetchAudioBuffer(url){
-  const r=await fetch(url);
-  if(!r.ok) throw new Error('fetch failed');
-  return r.arrayBuffer();
-}
-
-// Record Web Speech to AudioBuffer via MediaRecorder
-function recordSpeech(text,voice,lang,rate){
-  return new Promise((res,rej)=>{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const dest=ctx.createMediaStreamDestination();
-    const rec=new MediaRecorder(dest.stream,{mimeType:'audio/webm'});
-    const chunks=[];
-    rec.ondataavailable=e=>chunks.push(e.data);
-    rec.onstop=async()=>{
-      const blob=new Blob(chunks,{type:'audio/webm'});
-      const ab=await blob.arrayBuffer();
-      const decoded=await ctx.decodeAudioData(ab);
-      ctx.close(); res(decoded);
-    };
-    rec.start();
-    const u=new SpeechSynthesisUtterance(text);
-    if(voice)u.voice=voice; u.lang=lang; u.rate=rate||1;
-    u.onend=()=>setTimeout(()=>rec.stop(),200);
-    u.onerror=()=>{rec.stop();rej(new Error('speech error'));};
-    speechSynthesis.cancel();
-    speechSynthesis.speak(u);
-  });
-}
-
-// Concatenate AudioBuffers
-function concatBuffers(ctx, buffers){
-  const totalLen=buffers.reduce((s,b)=>s+b.length,0);
-  const out=ctx.createBuffer(1,totalLen,buffers[0].sampleRate);
-  const ch=out.getChannelData(0);
-  let offset=0;
-  for(const b of buffers){ch.set(b.getChannelData(0),offset);offset+=b.length;}
-  return out;
-}
-
-// AudioBuffer → WAV blob
-function audioBufferToWav(buffer){
-  const numCh=1, sampleRate=buffer.sampleRate;
-  const samples=buffer.getChannelData(0);
-  const pcm=new Int16Array(samples.length);
-  for(let i=0;i<samples.length;i++) pcm[i]=Math.max(-1,Math.min(1,samples[i]))*0x7FFF;
-  const wavHeader=new ArrayBuffer(44);
-  const view=new DataView(wavHeader);
-  const writeStr=(o,s)=>{for(let i=0;i<s.length;i++)view.setUint8(o+i,s.charCodeAt(i));};
-  writeStr(0,'RIFF'); view.setUint32(4,36+pcm.byteLength,true);
-  writeStr(8,'WAVE'); writeStr(12,'fmt '); view.setUint32(16,16,true);
-  view.setUint16(20,1,true); view.setUint16(22,numCh,true);
-  view.setUint32(24,sampleRate,true); view.setUint32(28,sampleRate*numCh*2,true);
-  view.setUint16(32,numCh*2,true); view.setUint16(34,16,true);
-  writeStr(36,'data'); view.setUint32(40,pcm.byteLength,true);
-  return new Blob([wavHeader,pcm.buffer],{type:'audio/wav'});
-}
-
-// WAV blob → MP3 blob via lamejs
-async function wavToMp3(wavBlob){
-  if(typeof lamejs==='undefined') return wavBlob; // fallback: return wav
-  const ab=await wavBlob.arrayBuffer();
-  const view=new DataView(ab);
-  const sampleRate=view.getUint32(24,true);
-  const pcmOffset=44;
-  const pcm=new Int16Array(ab.slice(pcmOffset));
-  const mp3enc=new lamejs.Mp3Encoder(1,sampleRate,128);
-  const chunks=[]; const block=1152;
-  for(let i=0;i<pcm.length;i+=block){
-    const s=pcm.subarray(i,i+block);
-    const buf=mp3enc.encodeBuffer(s);
-    if(buf.length>0) chunks.push(new Int8Array(buf));
-  }
-  const end=mp3enc.flush();
-  if(end.length>0) chunks.push(new Int8Array(end));
-  return new Blob(chunks,{type:'audio/mp3'});
-}
-
-function triggerDownload(blob, filename){
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download=filename;
-  document.body.appendChild(a); a.click();
-  setTimeout(()=>{URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
-}
-
-function makeSilenceBuffer(ctx, seconds){
-  return ctx.createBuffer(1, Math.floor(ctx.sampleRate*seconds), ctx.sampleRate);
-}
-
-async function startDownload(){
-  if(dlRunning) return;
-  const {chunks}=getDLQueue();
-  if(!chunks.length){showToast('Tidak ada kata untuk didownload');return;}
-
-  dlRunning=true; dlStop=false;
-  document.getElementById('btnStartDL').style.display='none';
-  document.getElementById('dlProgressWrap').style.display='block';
-
-  const filesDiv=document.getElementById('dlFiles');
-  filesDiv.innerHTML='';
-
-  // create file status items
-  const items=chunks.map((c,i)=>{
-    const d=document.createElement('div'); d.className='dl-file-item';
-    d.innerHTML=`<div class="dl-status pending" id="dlst${i}">○</div>
-      <div class="dl-file-name">vocab_${String(i+1).padStart(2,'0')}.mp3 (${c.length} kata)</div>
-      <div class="dl-file-size" id="dlsz${i}">—</div>`;
-    filesDiv.appendChild(d); return d;
-  });
-
-  const rate=1.0; // download always at 1x speed for cleaner audio
-  const pauseSec=1.2;
-  const pauseJP=0.4;
-  const ctx=new(window.AudioContext||window.webkitAudioContext)({sampleRate:22050});
-  let totalDone=0, totalWords=chunks.reduce((s,c)=>s+c.length,0);
-
-  for(let ci=0;ci<chunks.length;ci++){
-    if(dlStop) break;
-    const chunk=chunks[ci];
-    const stEl=document.getElementById(`dlst${ci}`);
-    const szEl=document.getElementById(`dlsz${ci}`);
-    stEl.className='dl-status active'; stEl.textContent='…';
-    setDLProgress(totalDone, totalWords, `File ${ci+1}/${chunks.length}…`);
-
-    const buffers=[];
-
-    for(let wi=0;wi<chunk.length;wi++){
-      if(dlStop) break;
-      const w=words[chunk[wi]];
-
-      // Helper: get audio as AudioBuffer
-      async function getAudio(text,lang,isJP){
-        if(isJP?useGoogleJP:useGoogleID){
-          try{
-            const ab=await fetchAudioBuffer(gUrl(text,lang));
-            return await ctx.decodeAudioData(ab);
-          }catch(e){}
-        }
-        // Web Speech → record
-        try { return await recordSpeech(text,isJP?voiceJP:voiceID,lang,rate); } catch(e){ return makeSilenceBuffer(ctx,0.5); }
-      }
-
-      // JP × 2, pause, ID × 2, long pause
-      const jp1=await getAudio(w.jp,'ja',true); if(dlStop)break;
-      const sil1=makeSilenceBuffer(ctx,pauseJP);
-      const jp2=await getAudio(w.jp,'ja',true); if(dlStop)break;
-      const sil2=makeSilenceBuffer(ctx,pauseSec);
-      const id1=await getAudio(w.id,'id',false); if(dlStop)break;
-      const sil3=makeSilenceBuffer(ctx,pauseJP);
-      const id2=await getAudio(w.id,'id',false); if(dlStop)break;
-      const sil4=makeSilenceBuffer(ctx,pauseSec*1.2);
-
-      buffers.push(jp1,sil1,jp2,sil2,id1,sil3,id2,sil4);
-      totalDone++;
-      setDLProgress(totalDone,totalWords,`File ${ci+1}/${chunks.length} · ${w.jp}`);
-    }
-    if(dlStop) break;
-
-    // Concat & encode
-    stEl.textContent='⚙'; szEl.textContent='encoding…';
-    const combined=concatBuffers(ctx,buffers);
-    const wav=audioBufferToWav(combined);
-    const mp3=await wavToMp3(wav);
-    const fname=`vocab_${String(ci+1).padStart(2,'0')}.mp3`;
-    triggerDownload(mp3,fname);
-    stEl.className='dl-status done'; stEl.textContent='✓';
-    szEl.textContent=(mp3.size/1024/1024).toFixed(1)+' MB';
-  }
-
-  ctx.close();
-  dlRunning=false;
-  if(!dlStop){
-    setDLProgress(totalWords,totalWords,'✓ Semua selesai!');
-    document.getElementById('btnCancelDL').textContent='Tutup';
-    showToast('✓ Download selesai!');
-  } else {
-    document.getElementById('btnStartDL').style.display='inline-flex';
-    document.getElementById('btnCancelDL').textContent='Batal';
-  }
-}
-
-function setDLProgress(done,total,label){
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById('dlProgressLabel').textContent=label;
-  document.getElementById('dlProgressPct').textContent=pct+'%';
-  document.getElementById('dlProgressFill').style.width=pct+'%';
-}
-function cancelDL(){
-  if(dlRunning){dlStop=true;showToast('Membatalkan…');}
-  else{document.getElementById('dlModal').classList.remove('show');document.getElementById('btnCancelDL').textContent='Batal';}
-}
-
-// ── CSV ──
-function openUpload(){document.getElementById('upModal').classList.add('show');}
-function closeUpload(){document.getElementById('upModal').classList.remove('show');pendingCSV=[];document.getElementById('csvPreview').textContent='';document.getElementById('btnImport').style.display='none';document.getElementById('csvInput').value='';}
-function handleDrop(e){e.preventDefault();e.currentTarget.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
-function handleFile(f){if(!f||!f.name.endsWith('.csv')){showToast('File harus .csv');return;}const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(f,'UTF-8');}
-function parseCSV(text){const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());if(lines.length<2){showToast('CSV kosong');return;}const rows=lines.slice(1).map(l=>{const parts=[];let cur='',inQ=false;for(const ch of l+','){if(ch==='"'){inQ=!inQ;}else if(ch===','&&!inQ){parts.push(cur.trim());cur='';}else cur+=ch;}return parts;}).filter(r=>r[0]&&r[1]);const h3=rows[0]&&rows[0].length>=3;pendingCSV=rows.map(r=>h3?{jp:r[0],hira:r[0],romaji:r[1],id:r[2]}:{jp:r[0],hira:r[0],romaji:'',id:r[1]});document.getElementById('csvPreview').textContent=`✓ ${pendingCSV.length} kata siap diimport`;document.getElementById('btnImport').style.display='inline-flex';}
-function importCSV(){const ex=new Set(words.map(w=>w.jp));let added=0;pendingCSV.forEach(w=>{if(!ex.has(w.jp)){words.push(w);ex.add(w.jp);added++;}});filteredIdx=words.map((_,i)=>i);document.getElementById('searchBox').value='';buildGrid(filteredIdx);closeUpload();showToast(`✓ ${added} kata ditambahkan. Total: ${words.length}`);setupMediaSession();}
-function downloadTemplate(){const csv=['"kanji"','"romaji"','"arti_indonesia"'].join(',')+'\n'+['"例"','"rei"','"Contoh"'].join(',')+'\n'+['"仕事"','"shigoto"','"Pekerjaan"'].join(',');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));a.download='vocab_template.csv';a.click();showToast('Template diunduh!');}
-
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
-
-// ── BOOT ──
-buildGrid(filteredIdx);
-setFeatured(0);
-document.getElementById('progressText').textContent=`0 / ${words.length}`;
-testGoogle();
-initWSVoices();
-updateDLPreview();
-</script>
 </body>
 </html>
