@@ -195,7 +195,17 @@
     transition:transform .1s ease;
   }
   .ctrlbtn:active{transform:scale(0.9);}
-  .ctrlbtn.audio{border-color:var(--sign-blue-dark);color:var(--sign-blue-dark);}
+  .ctrlbtn.skip{border-color:var(--sign-red-dark);color:var(--sign-red-dark);font-size:15px;}
+  .ctrlbtn.know{border-color:var(--sign-green-dark);color:var(--sign-green-dark);font-size:15px;}
+  .audiorow{display:flex;justify-content:center;margin-top:10px;}
+  .audiorow .ctrlbtn.audio{
+    width:auto;height:auto;border-radius:20px;
+    padding:8px 18px;
+    font-family:'Noto Sans JP',sans-serif;
+    font-size:12px;font-weight:500;
+    border-color:var(--sign-blue-dark);color:var(--sign-blue-dark);
+    gap:6px;
+  }
   .progress-post{
     display:flex;flex-direction:column;align-items:center;
     font-family:'Oswald',sans-serif;
@@ -268,13 +278,16 @@
 
   <div class="controls">
     <button class="ctrlbtn" id="prevBtn" aria-label="前へ">←</button>
-    <button class="ctrlbtn audio" id="audioBtn" aria-label="発音を聞く">🔊</button>
+    <button class="ctrlbtn skip" id="skipBtn" aria-label="まだ覚えていない">✗</button>
     <div class="progress-post">
-      <div class="progress-num" id="progressNum">1 / 50</div>
+      <div class="progress-num" id="progressNum">Lv 1/5</div>
       <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
     </div>
-    <button class="ctrlbtn audio" id="knowBtn" aria-label="覚えた">✓</button>
+    <button class="ctrlbtn know" id="knowBtn" aria-label="覚えた">✓</button>
     <button class="ctrlbtn" id="nextBtn" aria-label="次へ">→</button>
+  </div>
+  <div class="audiorow">
+    <button class="ctrlbtn audio" id="audioBtn" aria-label="発音を聞く">🔊 発音を聞く</button>
   </div>
 
   <div class="toolbar">
@@ -283,7 +296,7 @@
     <button class="toolbtn secondary" id="resetBtn">進捗リセット</button>
   </div>
 
-  <div class="footnote" id="footnote">覚えた単語: 0 / 50</div>
+  <div class="footnote" id="footnote">習得した単語: 0 / 80</div>
 </div>
 
 <script>
@@ -370,12 +383,18 @@ const DATA = [
 ];
 
 const catNames = {prohibit:"禁止 · larangan", warn:"警告 · peringatan", guide:"案内 · info & petunjuk", shop:"お店 · toko & bisnis"};
+const STORAGE_KEY = 'nihongo_street_signs_progress_v1';
+const hasCloudStorage = (typeof window.storage !== 'undefined');
 
 let deck = DATA.map((d,i)=>({...d, id:i}));
-let filtered = [...deck];
-let idx = 0;
-let known = new Set();
+let pool = [...deck];         // cards under current category filter
+let boxes = {};                // id -> mastery level 1..5 (1=new/hard, 5=mastered)
+let queue = [];                // history + upcoming drawn cards (array of ids)
+let pos = 0;                   // current position in queue
 let flipped = false;
+let currentCat = 'all';
+
+deck.forEach(d => boxes[d.id] = 1);
 
 const signboard = document.getElementById('signboard');
 const kanjiLine = document.getElementById('kanjiLine');
@@ -393,16 +412,62 @@ function lenClass(text){
   return 'len-xl';
 }
 
+// ---- persistence ----
+async function saveProgress(){
+  const payload = JSON.stringify({boxes});
+  try{
+    if(hasCloudStorage){
+      await window.storage.set(STORAGE_KEY, payload, false);
+    }else{
+      localStorage.setItem(STORAGE_KEY, payload);
+    }
+  }catch(e){ /* saving is best-effort */ }
+}
+async function loadProgress(){
+  try{
+    if(hasCloudStorage){
+      const r = await window.storage.get(STORAGE_KEY, false);
+      return r ? JSON.parse(r.value) : null;
+    }else{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }
+  }catch(e){ return null; }
+}
+
+// ---- weighted random draw (spaced-repetition-ish) ----
+// lower box = higher weight = shows up sooner/more often; box 5 = rare but never fully gone
+function weightOf(id){ return Math.max(1, 6 - (boxes[id]||1)); }
+
+function drawNext(excludeId){
+  const candidates = pool.length ? pool : deck;
+  let bag = [];
+  candidates.forEach(c => { for(let i=0;i<weightOf(c.id);i++) bag.push(c.id); });
+  if(candidates.length > 1 && excludeId !== undefined){
+    const trimmed = bag.filter(id => id !== excludeId);
+    if(trimmed.length) bag = trimmed;
+  }
+  return bag[Math.floor(Math.random()*bag.length)];
+}
+
+function cardById(id){ return deck[id]; }
+
+function masteredCount(){
+  return deck.filter(d => boxes[d.id] >= 5).length;
+}
+
 function render(){
-  const card = filtered[idx];
+  const id = queue[pos];
+  const card = cardById(id);
+  const box = boxes[id];
   signboard.className = 'signboard cat-' + card.cat + (flipped ? ' flipped' : '');
   kanjiLine.className = 'kanji-line ' + lenClass(card.k);
   kanjiLine.innerHTML = '<ruby>'+card.k+'<rt>'+card.f+'</rt></ruby>';
   meaningText.textContent = card.m;
   catLabel.textContent = catNames[card.cat];
-  progressNum.textContent = (idx+1) + ' / ' + filtered.length;
-  progressFill.style.width = (((idx+1)/filtered.length)*100) + '%';
-  footnote.textContent = '覚えた単語: ' + known.size + ' / ' + deck.length;
+  progressNum.textContent = 'Lv ' + box + '/5';
+  progressFill.style.width = ((box/5)*100) + '%';
+  footnote.textContent = '習得した単語: ' + masteredCount() + ' / ' + deck.length;
 }
 
 function flip(){
@@ -410,10 +475,45 @@ function flip(){
   signboard.classList.toggle('flipped', flipped);
 }
 
-function go(delta){
+// move within existing history, or draw a fresh weighted card at the end
+function goNext(){
   flipped = false;
-  idx = (idx + delta + filtered.length) % filtered.length;
   kanjiLine.classList.remove('reveal');
+  if(pos < queue.length - 1){
+    pos++;
+  }else{
+    const nextId = drawNext(queue[pos]);
+    queue.push(nextId);
+    pos++;
+  }
+  render();
+}
+function goPrev(){
+  flipped = false;
+  kanjiLine.classList.remove('reveal');
+  if(pos > 0) pos--;
+  render();
+}
+
+// mark decision: adjust mastery level, then always jump to a brand-new draw
+function mark(delta){
+  const id = queue[pos];
+  boxes[id] = Math.max(1, Math.min(5, boxes[id] + delta));
+  saveProgress();
+  flipped = false;
+  kanjiLine.classList.remove('reveal');
+  const nextId = drawNext(id);
+  queue = queue.slice(0, pos+1);
+  queue.push(nextId);
+  pos++;
+  render();
+}
+
+function resetQueue(){
+  const firstId = drawNext();
+  queue = [firstId];
+  pos = 0;
+  flipped = false;
   render();
 }
 
@@ -439,47 +539,53 @@ document.getElementById('furiBtn').addEventListener('click', (e)=>{
   kanjiLine.classList.remove('reveal');
   e.currentTarget.textContent = hidden ? 'ふりがなを表示' : 'ふりがなを隠す';
 });
-document.getElementById('prevBtn').addEventListener('click', ()=>go(-1));
-document.getElementById('nextBtn').addEventListener('click', ()=>go(1));
+document.getElementById('prevBtn').addEventListener('click', goPrev);
+document.getElementById('nextBtn').addEventListener('click', goNext);
 document.getElementById('audioBtn').addEventListener('click', (e)=>{
   e.stopPropagation();
-  speak(filtered[idx].f);
+  speak(cardById(queue[pos]).f);
 });
+// skip = "belum hafal" -> mastery turun 2 level -> lebih sering muncul lagi
+document.getElementById('skipBtn').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  mark(-2);
+});
+// tahu = "sudah hafal" -> mastery naik 1 level -> makin jarang muncul, tapi tetap sesekali
 document.getElementById('knowBtn').addEventListener('click', (e)=>{
   e.stopPropagation();
-  known.add(filtered[idx].id);
-  footnote.textContent = '覚えた単語: ' + known.size + ' / ' + deck.length;
-  go(1);
+  mark(1);
 });
 document.getElementById('shuffleBtn').addEventListener('click', ()=>{
-  for(let i=filtered.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [filtered[i],filtered[j]]=[filtered[j],filtered[i]];
-  }
-  idx = 0; flipped = false;
-  render();
+  resetQueue();
 });
 document.getElementById('resetBtn').addEventListener('click', ()=>{
-  known.clear();
-  render();
+  deck.forEach(d => boxes[d.id] = 1);
+  saveProgress();
+  resetQueue();
 });
 document.getElementById('catbar').addEventListener('click', (e)=>{
   const btn = e.target.closest('.catbtn');
   if(!btn) return;
   document.querySelectorAll('.catbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const cat = btn.dataset.cat;
-  filtered = cat === 'all' ? [...deck] : deck.filter(d=>d.cat===cat);
-  idx = 0; flipped = false;
-  render();
+  currentCat = btn.dataset.cat;
+  pool = currentCat === 'all' ? [...deck] : deck.filter(d=>d.cat===currentCat);
+  resetQueue();
 });
 document.addEventListener('keydown', (e)=>{
-  if(e.key==='ArrowRight') go(1);
-  if(e.key==='ArrowLeft') go(-1);
+  if(e.key==='ArrowRight') goNext();
+  if(e.key==='ArrowLeft') goPrev();
   if(e.key===' '){ e.preventDefault(); flip(); }
 });
 
-render();
+// ---- init: load saved progress, then draw first card ----
+(async function init(){
+  const saved = await loadProgress();
+  if(saved && saved.boxes){
+    deck.forEach(d => { if(saved.boxes[d.id] !== undefined) boxes[d.id] = saved.boxes[d.id]; });
+  }
+  resetQueue();
+})();
 </script>
 </body>
 </html>
