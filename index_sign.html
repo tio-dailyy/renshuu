@@ -128,7 +128,22 @@
     color:var(--ink);
     transform:rotateY(180deg);
     outline-color:var(--sign-blue-dark);
+    overflow-y:auto;
+    justify-content:flex-start;
+    padding-top:22px;
   }
+  .radical-note{
+    margin-top:14px;
+    font-size:12px;
+    line-height:1.55;
+    text-align:center;
+    color:#4a4a45;
+    background:var(--concrete);
+    border:1px dashed var(--concrete-line);
+    border-radius:8px;
+    padding:10px 12px;
+  }
+  .radical-note b{color:var(--ink);}
   .cat-prohibit .face{outline-color:var(--sign-red-dark);}
   .cat-prohibit .face.front{background:var(--sign-red);}
   .cat-warn .face{outline-color:var(--sign-yellow-dark);}
@@ -270,6 +285,7 @@
         <div class="face back" id="faceBack">
           <div class="meaning" id="meaningText"></div>
           <div class="cat-label" id="catLabel"></div>
+          <div class="radical-note" id="radicalNote"></div>
         </div>
       </div>
     </div>
@@ -296,7 +312,7 @@
     <button class="toolbtn secondary" id="resetBtn">進捗リセット</button>
   </div>
 
-  <div class="footnote" id="footnote">習得した単語: 0 / 80</div>
+  <div class="footnote" id="footnote">習得した単語: 0 / 79</div>
 </div>
 
 <script>
@@ -382,6 +398,88 @@ const DATA = [
   {k:"ペット同伴可",f:"ペットどうはんか",m:"Boleh bawa hewan peliharaan",cat:"shop"},
 ];
 
+const RADICALS = {
+  "入口": "入 (masuk) + 口 (mulut/lubang) → lubang tempat masuk",
+  "出口": "出 (keluar, kaki melangkah keluar dari gua) + 口 (lubang) → lubang tempat keluar",
+  "非常口": "非 (bukan/salah, dua sayap berlawanan) + 常 (biasa) + 口 (lubang) → pintu untuk keadaan yang bukan biasa",
+  "営業中": "営 (mengelola, api+markas) + 業 (usaha/pekerjaan) + 中 (sedang/tengah) → sedang menjalankan usaha",
+  "準備中": "準 (standar, air+burung elang) + 備 (orang+lengkap) + 中 (sedang) → sedang menyiapkan standar/kelengkapan",
+  "定休日": "定 (menetapkan, atap+benar) + 休 (orang bersandar di pohon = istirahat) + 日 (hari) → hari istirahat yang ditetapkan",
+  "立入禁止": "立 (berdiri) + 入 (masuk) + 禁 (hutan+altar = larangan suci) + 止 (jejak kaki = berhenti) → dilarang berdiri/masuk, harus berhenti",
+  "駐車禁止": "駐 (kuda+tuan = berhenti di satu titik) + 車 (roda kendaraan) + 禁止 (larangan) → kendaraan dilarang berhenti/parkir",
+  "駐車場": "駐 (berhenti) + 車 (kendaraan) + 場 (tanah+matahari terbit = tempat terbuka) → tempat kendaraan berhenti",
+  "一方通行": "一 (satu) + 方 (arah) + 通 (berjalan+tabung = melalui) + 行 (persimpangan jalan = pergi) → jalan yang dilalui satu arah",
+  "止まれ": "止 (piktograf jejak kaki yang berhenti melangkah) → berhenti",
+  "徐行": "徐 (melangkah pelan+sisa) + 行 (jalan) → berjalan perlahan",
+  "横断歩道": "横 (pohon+kuning = melintang) + 断 (memutus) + 歩 (dua kaki melangkah) + 道 (berjalan+kepala = jalan) → jalur melintang untuk melangkah kaki",
+  "歩行者専用": "歩 (melangkah) + 行 (jalan) + 者 (orang) + 専 (ladang+tangan = khusus) + 用 (piktograf ember = guna) → jalan khusus untuk orang berjalan kaki",
+  "工事中": "工 (alat tukang) + 事 (tangan memegang alat = urusan) + 中 (sedang) → sedang ada pekerjaan konstruksi",
+  "危険": "危 (orang membungkuk di tebing = bahaya) + 険 (bukit+curam) → tebing curam yang berbahaya",
+  "注意": "注 (air+tuan = menuangkan/fokus) + 意 (suara+hati = maksud) → menuangkan hati/pikiran fokus ke sesuatu",
+  "火気厳禁": "火 (api) + 気 (uap/udara) + 厳 (berani+tegas) + 禁 (larangan) → dilarang keras menyalakan api",
+  "喫煙所": "喫 (mulut+kontrak = menghisap) + 煙 (api+asap) + 所 (tempat) → tempat menghisap asap",
+  "禁煙": "禁 (larangan suci) + 煙 (api/asap) → larangan berasap (merokok)",
+  "トイレ": "Kata serapan dari bahasa Inggris 'toilet' — katakana, tidak ada kanji untuk dipecah",
+  "お手洗い": "手 (piktograf tangan) + 洗 (air+dulu/depan = mencuci) → tempat mencuci tangan (istilah halus untuk toilet)",
+  "案内所": "案 (tenang+kayu = meja rencana) + 内 (bingkai+masuk = dalam) + 所 (tempat) → tempat memberi info ke dalam",
+  "両替": "両 (piktograf timbangan dua sisi = kedua) + 替 (dua orang+matahari = mengganti) → menukar kedua sisi (uang)",
+  "割引": "割 (bahaya+pisau = memotong) + 引 (busur ditarik = menarik) → memotong harga dengan menarik turun",
+  "特売": "特 (sapi+kuil = khusus, sapi kurban) + 売 (menjual) → penjualan khusus",
+  "新発売": "新 (dekat+kapak = baru ditebang) + 発 (kaki melangkah+busur = berangkat/terbit) + 売 (menjual) → baru diterbitkan untuk dijual",
+  "売り切れ": "売 (menjual) + 切 (mirip pisau+pisau = memotong) → stok jualan terpotong habis",
+  "予約席": "予 (piktograf alat tenun = sebelumnya) + 約 (benang+sendok = mengikat janji) + 席 (atap+kain = tempat duduk) → tempat duduk yang sudah dijanjikan sebelumnya",
+  "満席": "満 (air+penuh) + 席 (tempat duduk) → tempat duduk penuh sesak",
+  "空室": "空 (lubang gua+alat = kosong/langit) + 室 (atap+sampai = ruangan) → ruangan kosong",
+  "貸切": "貸 (mengganti+uang kerang = meminjamkan) + 切 (memotong) → dipinjamkan secara utuh/khusus",
+  "交番": "交 (piktograf kaki bersilang = bertukar) + 番 (memilah+sawah = giliran) → tempat petugas bertukar giliran jaga",
+  "病院": "病 (sakit) + 院 (bukit/dinding+lengkap = institusi besar) → institusi besar untuk orang sakit",
+  "郵便局": "郵 (menjuntai+kota = pos) + 便 (orang+mengubah = kenyamanan) + 局 (atap+kurva = kantor) → kantor layanan pos kota",
+  "銀行": "銀 (logam+keras kepala = perak) + 行 (usaha/pergi) → usaha yang berkaitan dengan uang/perak",
+  "薬局": "薬 (tumbuhan+senang = obat) + 局 (kantor) → kantor tumbuhan obat yang menyembuhkan",
+  "停留所": "停 (orang+paviliun = berhenti) + 留 (sawah+menahan = tinggal) + 所 (tempat) → tempat orang berhenti dan menunggu",
+  "踏切": "踏 (kaki+tumpang tindih = menginjak) + 切 (memotong) → tempat kaki menginjak jalur rel yang terpotong",
+  "落石注意": "落 (tumbuhan+air mengalir = jatuh, daun jatuh) + 石 (piktograf batu di tebing) + 注意 (perhatian) → perhatikan batu jatuh",
+  "迂回": "迂 (berjalan+berputar) + 回 (piktograf pusaran dalam kotak) → berjalan memutar",
+  "通行止め": "通 (melalui) + 行 (jalan) + 止 (berhenti) → jalan yang dilalui dihentikan",
+  "速度制限": "速 (berjalan+ikatan = cepat) + 度 (atap+tangan = derajat) + 制 (cabang+pisau = kontrol) + 限 (bukit+berhenti = batas) → mengontrol batas kecepatan",
+  "譲れ": "譲 (kata+襄 = mengalah) → mengalah lewat perkataan (memberi jalan)",
+  "私有地": "私 (padi+pribadi) + 有 (daging+tangan = memiliki) + 地 (tanah+也) → tanah yang dimiliki pribadi",
+  "監視カメラ作動中": "監 (mata besar+piring = mengawasi) + 視 (menunjukkan+melihat = memandang) + 作 (orang+membuat) + 動 (berat+tenaga = bergerak) + 中 (sedang) → kamera pengawas sedang aktif bergerak",
+  "開店": "開 (gerbang+tangan membuka palang) + 店 (atap+menempati = toko) → membuka toko",
+  "閉店": "閉 (gerbang+palang tertutup) + 店 (toko) → menutup toko",
+  "各種取扱": "各 (kaki turun+mulut = masing-masing) + 種 (padi+tumpuk = jenis/benih) + 取 (telinga+tangan = mengambil) + 扱 (tangan+mencapai = menangani) → menangani masing-masing jenis barang",
+  "コインロッカー": "Kata serapan 'coin locker' — katakana, tidak ada kanji untuk dipecah",
+  "自動販売機": "自 (piktograf hidung = diri sendiri) + 動 (bergerak) + 販 (uang+kebalikan = berdagang) + 売 (menjual) + 機 (kayu+hampir = mesin) → mesin yang bergerak sendiri menjual dagangan",
+  "24時間営業": "時 (matahari+kuil = waktu) + 間 (gerbang+matahari = celah waktu) + 営業 (usaha) → usaha buka sepanjang celah waktu",
+  "現金のみ": "現 (raja/permata+melihat = nyata) + 金 (piktograf logam dalam tanah = uang) → uang yang terlihat nyata (tunai)",
+  "お持ち帰り": "持 (tangan+kuil = memegang) + 帰 (kain+sapu = pulang) → memegang lalu dibawa pulang",
+  "満車": "満 (penuh) + 車 (kendaraan) → kendaraan (parkir) penuh",
+  "空車": "空 (kosong) + 車 (kendaraan) → kendaraan/parkir kosong",
+  "有料": "有 (memiliki) + 料 (beras+takaran = biaya, mengukur beras) → memiliki biaya",
+  "無料": "無 (piktograf orang menari dgn kain = tidak ada) + 料 (biaya) → tidak ada biaya",
+  "撮影禁止": "撮 (tangan+paling = memotret) + 影 (pemandangan+garis cahaya = bayangan/foto) + 禁止 (larangan) → dilarang mengambil bayangan (foto)",
+  "スリップ注意": "スリップ (serapan 'slip') + 注意 (perhatian, tuangkan hati) → perhatikan licin",
+  "頭上注意": "頭 (wadah+kepala) + 上 (garis di atas garis) + 注意 (perhatian) → perhatikan bagian atas kepala",
+  "段差注意": "段 (alat pemukul+tangga = tingkat) + 差 (perbedaan) + 注意 (perhatian) → perhatikan perbedaan tingkat (undakan)",
+  "濡れています": "濡 (air+butuh, hujan yang harus turun) → menjadi basah",
+  "自転車専用": "自 (diri sendiri) + 転 (kendaraan+berputar = berputar) + 車 (kendaraan) + 専用 (khusus guna) → kendaraan yang diputar sendiri (sepeda), khusus digunakan",
+  "消火器": "消 (air+kecil = memadamkan) + 火 (api) + 器 (anjing+wadah = alat) → alat air pemadam api",
+  "避難場所": "避 (berjalan+menyingkir = menghindar) + 難 (burung+sulit = bencana) + 場所 (tempat) → tempat menghindar dari bencana",
+  "給油所": "給 (benang+gabung = memberi/pasokan) + 油 (air+dari = minyak) + 所 (tempat) → tempat memasok minyak",
+  "温泉": "温 (air+hangat, matahari+piring) + 泉 (putih+air = mata air) → mata air hangat",
+  "神社": "神 (altar+petir = dewa) + 社 (altar+tanah = kuil) → altar tanah untuk dewa",
+  "お寺": "寺 (tanah+tangan mengukur, awalnya berarti lembaga/istana) → kuil",
+  "展望台": "展 (tubuh+berkembang = memamerkan) + 望 (hilang+bulan+berdiri = melihat jauh/harap) + 台 (pribadi+mulut = platform) → platform untuk melihat pemandangan jauh",
+  "車両進入禁止": "車 (kendaraan) + 両 (kedua/timbangan) + 進 (berjalan+burung = maju) + 入 (masuk) + 禁止 (larangan) → kendaraan dilarang maju masuk",
+  "動物注意": "動 (bergerak) + 物 (sapi+勿 = benda/makhluk) + 注意 (perhatian) → perhatikan makhluk yang bergerak",
+  "転落注意": "転 (berputar/berpindah) + 落 (jatuh, daun jatuh) + 注意 (perhatian) → perhatikan risiko jatuh",
+  "使用中": "使 (orang+pejabat = menyuruh/menggunakan) + 用 (guna) + 中 (sedang) → sedang digunakan",
+  "故障中": "故 (lama+tindakan = sebab/lama) + 障 (bukit+lencana = halangan) + 中 (sedang) → sedang ada halangan (rusak)",
+  "お会計はこちら": "会 (orang bertemu) + 計 (kata+sepuluh = menghitung) → tempat bertemu untuk menghitung (bayar)",
+  "ラストオーダー": "Kata serapan 'last order' — katakana, tidak ada kanji untuk dipecah",
+  "ペット同伴可": "同 (bingkai+mulut = sama) + 伴 (orang+setengah = menemani) + 可 (mulut+丂 = boleh) → boleh menemani bersama-sama",
+};
+
 const catNames = {prohibit:"禁止 · larangan", warn:"警告 · peringatan", guide:"案内 · info & petunjuk", shop:"お店 · toko & bisnis"};
 const STORAGE_KEY = 'nihongo_street_signs_progress_v1';
 const hasCloudStorage = (typeof window.storage !== 'undefined');
@@ -400,6 +498,7 @@ const signboard = document.getElementById('signboard');
 const kanjiLine = document.getElementById('kanjiLine');
 const meaningText = document.getElementById('meaningText');
 const catLabel = document.getElementById('catLabel');
+const radicalNote = document.getElementById('radicalNote');
 const progressNum = document.getElementById('progressNum');
 const progressFill = document.getElementById('progressFill');
 const footnote = document.getElementById('footnote');
@@ -465,6 +564,7 @@ function render(){
   kanjiLine.innerHTML = '<ruby>'+card.k+'<rt>'+card.f+'</rt></ruby>';
   meaningText.textContent = card.m;
   catLabel.textContent = catNames[card.cat];
+  radicalNote.innerHTML = '<b>🧩 Radikal:</b> ' + (RADICALS[card.k] || '');
   progressNum.textContent = 'Lv ' + box + '/5';
   progressFill.style.width = ((box/5)*100) + '%';
   footnote.textContent = '習得した単語: ' + masteredCount() + ' / ' + deck.length;
