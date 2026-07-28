@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>日本の街角単語帳</title>
+<script src="kanji-detail.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -257,6 +258,70 @@
     .hint{font-size:10px;}
     .progress-num{font-size:12px;}
   }
+
+  .kj{
+    cursor:pointer;
+    text-decoration:underline dotted currentColor;
+    text-underline-offset:6px;
+    text-decoration-thickness:1.5px;
+    opacity:0.98;
+  }
+  .kj:active{opacity:0.6;}
+
+  .kanji-modal{
+    position:fixed;inset:0;
+    background:rgba(20,18,14,0.6);
+    display:flex;align-items:center;justify-content:center;
+    padding:20px;
+    z-index:60;
+    opacity:0;pointer-events:none;
+    transition:opacity .18s ease;
+  }
+  .kanji-modal.open{opacity:1;pointer-events:auto;}
+  .kanji-modal-content{
+    background:var(--white);
+    border-radius:16px;
+    max-width:380px;width:100%;
+    max-height:82vh;overflow-y:auto;
+    padding:24px 20px 26px;
+    position:relative;
+    border:3px solid var(--ink);
+    font-family:'Noto Sans JP',sans-serif;
+  }
+  .kj-modal-close{
+    position:absolute;top:12px;right:14px;
+    font-size:20px;line-height:1;
+    cursor:pointer;color:#8a8a82;
+    width:28px;height:28px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:50%;
+  }
+  .kj-modal-close:active{background:var(--concrete);}
+  .kj-modal-char{
+    font-weight:700;font-size:58px;text-align:center;
+    color:var(--sign-blue-dark);margin-bottom:2px;
+  }
+  .kj-modal-section-title{
+    font-family:'Oswald',sans-serif;
+    font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
+    color:#8a8a82;margin-top:18px;margin-bottom:8px;
+  }
+  .kj-comp-list{display:flex;flex-direction:column;gap:6px;}
+  .kj-comp{
+    display:flex;align-items:center;gap:12px;
+    background:var(--concrete);border-radius:8px;
+    padding:9px 12px;
+  }
+  .kj-comp-ch{
+    font-weight:700;font-size:24px;color:var(--ink);
+    flex:none;width:34px;text-align:center;
+  }
+  .kj-comp-m{font-size:13px;color:#4a4a45;line-height:1.4;}
+  .kj-modal-mnemonic{font-size:14.5px;line-height:1.65;color:#2a2a26;}
+  .kj-modal-example{font-size:15px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  .kj-modal-example ruby{ruby-position:over;}
+  .kj-modal-example rt{font-size:11px;}
+  .kj-modal-example .ex-m{color:#4a4a45;font-size:13px;}
 </style>
 </head>
 <body>
@@ -311,8 +376,17 @@
     <button class="toolbtn secondary" id="furiBtn">ふりがなを隠す</button>
     <button class="toolbtn secondary" id="resetBtn">進捗リセット</button>
   </div>
+  <div class="toolbar">
+    <button class="toolbtn secondary" id="exportBtn">📤 進捗をエクスポート</button>
+    <button class="toolbtn secondary" id="importBtn">📥 進捗をインポート</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none;">
+  </div>
 
   <div class="footnote" id="footnote">習得した単語: 0 / 79</div>
+</div>
+
+<div class="kanji-modal" id="kanjiModal">
+  <div class="kanji-modal-content" id="kanjiModalContent"></div>
 </div>
 
 <script>
@@ -499,6 +573,8 @@ const kanjiLine = document.getElementById('kanjiLine');
 const meaningText = document.getElementById('meaningText');
 const catLabel = document.getElementById('catLabel');
 const radicalNote = document.getElementById('radicalNote');
+const kanjiModal = document.getElementById('kanjiModal');
+const kanjiModalContent = document.getElementById('kanjiModalContent');
 const progressNum = document.getElementById('progressNum');
 const progressFill = document.getElementById('progressFill');
 const footnote = document.getElementById('footnote');
@@ -555,13 +631,25 @@ function masteredCount(){
   return deck.filter(d => boxes[d.id] >= 5).length;
 }
 
+function wrapKanji(text){
+  let out = '';
+  for(const ch of text){
+    if(/[\u4e00-\u9faf]/.test(ch)){
+      out += '<span class="kj" data-ch="'+ch+'">'+ch+'</span>';
+    }else{
+      out += ch;
+    }
+  }
+  return out;
+}
+
 function render(){
   const id = queue[pos];
   const card = cardById(id);
   const box = boxes[id];
   signboard.className = 'signboard cat-' + card.cat + (flipped ? ' flipped' : '');
   kanjiLine.className = 'kanji-line ' + lenClass(card.k);
-  kanjiLine.innerHTML = '<ruby>'+card.k+'<rt>'+card.f+'</rt></ruby>';
+  kanjiLine.innerHTML = '<ruby>'+wrapKanji(card.k)+'<rt>'+card.f+'</rt></ruby>';
   meaningText.textContent = card.m;
   catLabel.textContent = catNames[card.cat];
   radicalNote.innerHTML = '<b>🧩 Radikal:</b> ' + (RADICALS[card.k] || '');
@@ -626,8 +714,78 @@ function speak(text){
   window.speechSynthesis.speak(u);
 }
 
+// ---- per-kanji detail modal ----
+function openKanjiDetail(ch){
+  const d = (typeof KANJI_DETAIL !== 'undefined') ? KANJI_DETAIL[ch] : null;
+  if(!d){
+    kanjiModalContent.innerHTML =
+      '<div class="kj-modal-close" id="kjModalClose">✕</div>' +
+      '<div class="kj-modal-char">'+ch+'</div>' +
+      '<div class="kj-modal-mnemonic">Detail untuk karakter ini belum tersedia.</div>';
+    kanjiModal.classList.add('open');
+    document.getElementById('kjModalClose').addEventListener('click', closeKanjiModal);
+    return;
+  }
+  const compHtml = d.c.map(([c,m]) =>
+    '<div class="kj-comp"><span class="kj-comp-ch">'+c+'</span><span class="kj-comp-m">'+m+'</span></div>'
+  ).join('');
+  kanjiModalContent.innerHTML =
+    '<div class="kj-modal-close" id="kjModalClose">✕</div>' +
+    '<div class="kj-modal-char">'+ch+'</div>' +
+    '<div class="kj-modal-section-title">部品 · Komponen</div>' +
+    '<div class="kj-comp-list">'+compHtml+'</div>' +
+    '<div class="kj-modal-section-title">💡 Mnemonik</div>' +
+    '<div class="kj-modal-mnemonic">'+d.mn+'</div>' +
+    '<div class="kj-modal-section-title">📝 Contoh kata</div>' +
+    '<div class="kj-modal-example"><ruby>'+d.w+'<rt>'+d.r+'</rt></ruby><span class="ex-m">— '+d.wm+'</span></div>';
+  kanjiModal.classList.add('open');
+  document.getElementById('kjModalClose').addEventListener('click', closeKanjiModal);
+}
+function closeKanjiModal(){
+  kanjiModal.classList.remove('open');
+}
+kanjiModal.addEventListener('click', (e)=>{
+  if(e.target === kanjiModal) closeKanjiModal();
+});
+
+// ---- manual export/import backup (works even without any browser storage) ----
+function exportProgress(){
+  const payload = JSON.stringify({boxes}, null, 1);
+  const blob = new Blob([payload], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'nihongo_progress.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importProgressFile(file){
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(data && data.boxes){
+        deck.forEach(d => { if(data.boxes[d.id] !== undefined) boxes[d.id] = data.boxes[d.id]; });
+        saveProgress();
+        resetQueue();
+      }
+    }catch(err){
+      alert('File progres tidak valid.');
+    }
+  };
+  reader.readAsText(file);
+}
+
 signboard.addEventListener('click', flip);
 kanjiLine.addEventListener('click', (e)=>{
+  const kjSpan = e.target.closest('.kj');
+  if(kjSpan){
+    e.stopPropagation();
+    openKanjiDetail(kjSpan.dataset.ch);
+    return;
+  }
   if(document.body.classList.contains('hide-furi')){
     e.stopPropagation();
     kanjiLine.classList.toggle('reveal');
@@ -663,6 +821,15 @@ document.getElementById('resetBtn').addEventListener('click', ()=>{
   saveProgress();
   resetQueue();
 });
+document.getElementById('exportBtn').addEventListener('click', exportProgress);
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  document.getElementById('importFile').click();
+});
+document.getElementById('importFile').addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(f) importProgressFile(f);
+  e.target.value = '';
+});
 document.getElementById('catbar').addEventListener('click', (e)=>{
   const btn = e.target.closest('.catbtn');
   if(!btn) return;
@@ -673,6 +840,10 @@ document.getElementById('catbar').addEventListener('click', (e)=>{
   resetQueue();
 });
 document.addEventListener('keydown', (e)=>{
+  if(kanjiModal.classList.contains('open')){
+    if(e.key==='Escape') closeKanjiModal();
+    return;
+  }
   if(e.key==='ArrowRight') goNext();
   if(e.key==='ArrowLeft') goPrev();
   if(e.key===' '){ e.preventDefault(); flip(); }
