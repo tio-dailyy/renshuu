@@ -307,6 +307,17 @@
     font-weight:700;font-size:58px;text-align:center;
     color:var(--sign-blue-dark);margin-bottom:2px;
   }
+  .kj-modal-yomi{
+    display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
+    margin-bottom:4px;
+  }
+  .kj-modal-yomi span{
+    font-family:'Noto Sans JP',sans-serif;
+    font-size:13px;font-weight:500;
+    padding:3px 10px;border-radius:12px;
+  }
+  .yomi-on{background:#e3ecf5;color:var(--sign-blue-dark);}
+  .yomi-kun{background:#eee7f7;color:var(--sign-purple-dark);}
   .kj-modal-section-title{
     font-family:'Oswald',sans-serif;
     font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
@@ -789,6 +800,10 @@ function openKanjiDetail(ch){
   kanjiModalContent.innerHTML =
     '<div class="kj-modal-close" id="kjModalClose">✕</div>' +
     '<div class="kj-modal-char">'+ch+'</div>' +
+    '<div class="kj-modal-yomi">' +
+      (d.on ? '<span class="yomi-on">音 '+d.on+'</span>' : '') +
+      (d.kun ? '<span class="yomi-kun">訓 '+d.kun+'</span>' : '') +
+    '</div>' +
     '<div class="kj-modal-section-title">部品 · Komponen</div>' +
     '<div class="kj-comp-list">'+compHtml+'</div>' +
     '<div class="kj-modal-section-title">💡 Mnemonik</div>' +
