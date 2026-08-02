@@ -1,0 +1,517 @@
+[
+ {
+  "w": "入口",
+  "f": "いりぐち",
+  "m": "Pintu masuk"
+ },
+ {
+  "w": "出口",
+  "f": "でぐち",
+  "m": "Pintu keluar"
+ },
+ {
+  "w": "非常口",
+  "f": "ひじょうぐち",
+  "m": "Pintu darurat"
+ },
+ {
+  "w": "営業中",
+  "f": "えいぎょうちゅう",
+  "m": "Sedang buka (toko)"
+ },
+ {
+  "w": "準備中",
+  "f": "じゅんびちゅう",
+  "m": "Sedang tutup / persiapan"
+ },
+ {
+  "w": "定休日",
+  "f": "ていきゅうび",
+  "m": "Hari libur tetap"
+ },
+ {
+  "w": "立入禁止",
+  "f": "たちいりきんし",
+  "m": "Dilarang masuk"
+ },
+ {
+  "w": "駐車禁止",
+  "f": "ちゅうしゃきんし",
+  "m": "Dilarang parkir"
+ },
+ {
+  "w": "駐車場",
+  "f": "ちゅうしゃじょう",
+  "m": "Tempat parkir"
+ },
+ {
+  "w": "一方通行",
+  "f": "いっぽうつうこう",
+  "m": "Jalan satu arah"
+ },
+ {
+  "w": "止まれ",
+  "f": "とまれ",
+  "m": "Berhenti"
+ },
+ {
+  "w": "徐行",
+  "f": "じょこう",
+  "m": "Pelan-pelan"
+ },
+ {
+  "w": "横断歩道",
+  "f": "おうだんほどう",
+  "m": "Zebra cross"
+ },
+ {
+  "w": "歩行者専用",
+  "f": "ほこうしゃせんよう",
+  "m": "Khusus pejalan kaki"
+ },
+ {
+  "w": "工事中",
+  "f": "こうじちゅう",
+  "m": "Sedang ada konstruksi"
+ },
+ {
+  "w": "危険",
+  "f": "きけん",
+  "m": "Bahaya"
+ },
+ {
+  "w": "注意",
+  "f": "ちゅうい",
+  "m": "Perhatian / hati-hati"
+ },
+ {
+  "w": "火気厳禁",
+  "f": "かきげんきん",
+  "m": "Dilarang keras menyalakan api"
+ },
+ {
+  "w": "喫煙所",
+  "f": "きつえんじょ",
+  "m": "Area merokok"
+ },
+ {
+  "w": "禁煙",
+  "f": "きんえん",
+  "m": "Dilarang merokok"
+ },
+ {
+  "w": "トイレ",
+  "f": "トイレ",
+  "m": "Toilet"
+ },
+ {
+  "w": "お手洗い",
+  "f": "おてあらい",
+  "m": "Kamar kecil (halus)"
+ },
+ {
+  "w": "案内所",
+  "f": "あんないじょ",
+  "m": "Pusat informasi"
+ },
+ {
+  "w": "両替",
+  "f": "りょうがえ",
+  "m": "Penukaran uang"
+ },
+ {
+  "w": "割引",
+  "f": "わりびき",
+  "m": "Diskon"
+ },
+ {
+  "w": "特売",
+  "f": "とくばい",
+  "m": "Obral / promo khusus"
+ },
+ {
+  "w": "新発売",
+  "f": "しんはつばい",
+  "m": "Rilis baru"
+ },
+ {
+  "w": "売り切れ",
+  "f": "うりきれ",
+  "m": "Habis terjual"
+ },
+ {
+  "w": "予約席",
+  "f": "よやくせき",
+  "m": "Kursi reservasi"
+ },
+ {
+  "w": "満席",
+  "f": "まんせき",
+  "m": "Penuh (kursi/tempat)"
+ },
+ {
+  "w": "空室",
+  "f": "くうしつ",
+  "m": "Kamar kosong (hotel)"
+ },
+ {
+  "w": "貸切",
+  "f": "かしきり",
+  "m": "Disewa penuh / private"
+ },
+ {
+  "w": "交番",
+  "f": "こうばん",
+  "m": "Pos polisi"
+ },
+ {
+  "w": "病院",
+  "f": "びょういん",
+  "m": "Rumah sakit"
+ },
+ {
+  "w": "郵便局",
+  "f": "ゆうびんきょく",
+  "m": "Kantor pos"
+ },
+ {
+  "w": "銀行",
+  "f": "ぎんこう",
+  "m": "Bank"
+ },
+ {
+  "w": "薬局",
+  "f": "やっきょく",
+  "m": "Apotek"
+ },
+ {
+  "w": "停留所",
+  "f": "ていりゅうじょ",
+  "m": "Halte bus"
+ },
+ {
+  "w": "踏切",
+  "f": "ふみきり",
+  "m": "Perlintasan kereta"
+ },
+ {
+  "w": "落石注意",
+  "f": "らくせきちゅうい",
+  "m": "Awas batu jatuh"
+ },
+ {
+  "w": "迂回",
+  "f": "うかい",
+  "m": "Jalan memutar / alternatif"
+ },
+ {
+  "w": "通行止め",
+  "f": "つうこうどめ",
+  "m": "Jalan ditutup"
+ },
+ {
+  "w": "速度制限",
+  "f": "そくどせいげん",
+  "m": "Batas kecepatan"
+ },
+ {
+  "w": "譲れ",
+  "f": "ゆずれ",
+  "m": "Beri jalan (prioritas)"
+ },
+ {
+  "w": "私有地",
+  "f": "しゆうち",
+  "m": "Tanah pribadi"
+ },
+ {
+  "w": "監視カメラ作動中",
+  "f": "かんしカメラさどうちゅう",
+  "m": "CCTV sedang aktif"
+ },
+ {
+  "w": "開店",
+  "f": "かいてん",
+  "m": "Toko buka"
+ },
+ {
+  "w": "閉店",
+  "f": "へいてん",
+  "m": "Toko tutup"
+ },
+ {
+  "w": "各種取扱",
+  "f": "かくしゅとりあつかい",
+  "m": "Menjual / melayani berbagai jenis"
+ },
+ {
+  "w": "コインロッカー",
+  "f": "コインロッカー",
+  "m": "Loker koin"
+ },
+ {
+  "w": "自動販売機",
+  "f": "じどうはんばいき",
+  "m": "Mesin penjual otomatis"
+ },
+ {
+  "w": "24時間営業",
+  "f": "にじゅうよじかんえいぎょう",
+  "m": "Buka 24 jam"
+ },
+ {
+  "w": "現金のみ",
+  "f": "げんきんのみ",
+  "m": "Hanya tunai"
+ },
+ {
+  "w": "お持ち帰り",
+  "f": "おもちかえり",
+  "m": "Bawa pulang / take away"
+ },
+ {
+  "w": "満車",
+  "f": "まんしゃ",
+  "m": "Parkir penuh"
+ },
+ {
+  "w": "空車",
+  "f": "くうしゃ",
+  "m": "Kosong (parkir/taksi)"
+ },
+ {
+  "w": "有料",
+  "f": "ゆうりょう",
+  "m": "Berbayar"
+ },
+ {
+  "w": "無料",
+  "f": "むりょう",
+  "m": "Gratis"
+ },
+ {
+  "w": "撮影禁止",
+  "f": "さつえいきんし",
+  "m": "Dilarang memotret"
+ },
+ {
+  "w": "スリップ注意",
+  "f": "スリップちゅうい",
+  "m": "Awas licin"
+ },
+ {
+  "w": "頭上注意",
+  "f": "ずじょうちゅうい",
+  "m": "Awas kepala terbentur"
+ },
+ {
+  "w": "段差注意",
+  "f": "だんさちゅうい",
+  "m": "Awas ada undakan"
+ },
+ {
+  "w": "濡れています",
+  "f": "ぬれています",
+  "m": "Lantai basah"
+ },
+ {
+  "w": "自転車専用",
+  "f": "じてんしゃせんよう",
+  "m": "Khusus sepeda"
+ },
+ {
+  "w": "消火器",
+  "f": "しょうかき",
+  "m": "Alat pemadam api"
+ },
+ {
+  "w": "避難場所",
+  "f": "ひなんばしょ",
+  "m": "Tempat evakuasi"
+ },
+ {
+  "w": "給油所",
+  "f": "きゅうゆじょ",
+  "m": "SPBU"
+ },
+ {
+  "w": "温泉",
+  "f": "おんせん",
+  "m": "Pemandian air panas"
+ },
+ {
+  "w": "神社",
+  "f": "じんじゃ",
+  "m": "Kuil Shinto"
+ },
+ {
+  "w": "お寺",
+  "f": "おてら",
+  "m": "Kuil Buddha"
+ },
+ {
+  "w": "展望台",
+  "f": "てんぼうだい",
+  "m": "Dek pemandangan"
+ },
+ {
+  "w": "車両進入禁止",
+  "f": "しゃりょうしんにゅうきんし",
+  "m": "Kendaraan dilarang masuk"
+ },
+ {
+  "w": "動物注意",
+  "f": "どうぶつちゅうい",
+  "m": "Awas hewan menyeberang"
+ },
+ {
+  "w": "転落注意",
+  "f": "てんらくちゅうい",
+  "m": "Awas jatuh"
+ },
+ {
+  "w": "使用中",
+  "f": "しようちゅう",
+  "m": "Sedang digunakan"
+ },
+ {
+  "w": "故障中",
+  "f": "こしょうちゅう",
+  "m": "Sedang rusak"
+ },
+ {
+  "w": "お会計はこちら",
+  "f": "おかいけいはこちら",
+  "m": "Kasir di sini"
+ },
+ {
+  "w": "ラストオーダー",
+  "f": "ラストオーダー",
+  "m": "Pesanan terakhir"
+ },
+ {
+  "w": "ペット同伴可",
+  "f": "ペットどうはんか",
+  "m": "Boleh bawa hewan peliharaan"
+ },
+ {
+  "w": "食べる",
+  "f": "たべる",
+  "m": "Makan"
+ },
+ {
+  "w": "飲む",
+  "f": "のむ",
+  "m": "Minum"
+ },
+ {
+  "w": "見る",
+  "f": "みる",
+  "m": "Melihat"
+ },
+ {
+  "w": "聞く",
+  "f": "きく",
+  "m": "Mendengar / bertanya"
+ },
+ {
+  "w": "話す",
+  "f": "はなす",
+  "m": "Berbicara"
+ },
+ {
+  "w": "読む",
+  "f": "よむ",
+  "m": "Membaca"
+ },
+ {
+  "w": "書く",
+  "f": "かく",
+  "m": "Menulis"
+ },
+ {
+  "w": "買う",
+  "f": "かう",
+  "m": "Membeli"
+ },
+ {
+  "w": "来る",
+  "f": "くる",
+  "m": "Datang"
+ },
+ {
+  "w": "学校",
+  "f": "がっこう",
+  "m": "Sekolah"
+ },
+ {
+  "w": "先生",
+  "f": "せんせい",
+  "m": "Guru"
+ },
+ {
+  "w": "友達",
+  "f": "ともだち",
+  "m": "Teman"
+ },
+ {
+  "w": "家族",
+  "f": "かぞく",
+  "m": "Keluarga"
+ },
+ {
+  "w": "大きい",
+  "f": "おおきい",
+  "m": "Besar"
+ },
+ {
+  "w": "小さい",
+  "f": "ちいさい",
+  "m": "Kecil"
+ },
+ {
+  "w": "古い",
+  "f": "ふるい",
+  "m": "Lama / tua"
+ },
+ {
+  "w": "高い",
+  "f": "たかい",
+  "m": "Tinggi / mahal"
+ },
+ {
+  "w": "安い",
+  "f": "やすい",
+  "m": "Murah"
+ },
+ {
+  "w": "忙しい",
+  "f": "いそがしい",
+  "m": "Sibuk"
+ },
+ {
+  "w": "元気",
+  "f": "げんき",
+  "m": "Sehat / semangat"
+ },
+ {
+  "w": "天気",
+  "f": "てんき",
+  "m": "Cuaca"
+ },
+ {
+  "w": "経験",
+  "f": "けいけん",
+  "m": "Pengalaman"
+ },
+ {
+  "w": "説明",
+  "f": "せつめい",
+  "m": "Penjelasan"
+ },
+ {
+  "w": "到着",
+  "f": "とうちゃく",
+  "m": "Tiba"
+ }
+]
