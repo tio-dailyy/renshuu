@@ -18,6 +18,8 @@
     --sign-yellow-dark:#9C7E00;
     --sign-green:#1B7A3D;
     --sign-green-dark:#0F4E27;
+    --sign-purple:#5B3A9E;
+    --sign-purple-dark:#3B2568;
     --concrete:#EDEAE0;
     --concrete-line:#D8D4C6;
     --ink:#1C1C1C;
@@ -85,6 +87,7 @@
   .catbtn.warn .dot{background:var(--sign-yellow);clip-path:polygon(50% 0,100% 100%,0 100%);}
   .catbtn.guide .dot{background:var(--sign-blue);border-radius:2px;}
   .catbtn.shop .dot{background:var(--sign-green);transform:rotate(45deg);}
+  .catbtn.study .dot{background:var(--sign-purple);border-radius:3px;}
   .catbtn.active{background:var(--ink);color:var(--white);border-color:var(--ink);}
   .catbtn:active{transform:scale(0.96);}
 
@@ -153,6 +156,8 @@
   .cat-guide .face.front{background:var(--sign-blue);}
   .cat-shop .face{outline-color:var(--sign-green-dark);}
   .cat-shop .face.front{background:var(--sign-green);}
+  .cat-study .face{outline-color:var(--sign-purple-dark);}
+  .cat-study .face.front{background:var(--sign-purple);}
 
   .kanji-line{
     font-weight:700;
@@ -193,6 +198,7 @@
   .cat-warn .cat-label{color:var(--sign-yellow-dark);}
   .cat-guide .cat-label{color:var(--sign-blue-dark);}
   .cat-shop .cat-label{color:var(--sign-green-dark);}
+  .cat-study .cat-label{color:var(--sign-purple-dark);}
 
   .controls{
     display:flex;align-items:center;justify-content:center;gap:clamp(8px,3vw,14px);
@@ -322,6 +328,8 @@
   .kj-modal-example ruby{ruby-position:over;}
   .kj-modal-example rt{font-size:11px;}
   .kj-modal-example .ex-m{color:#4a4a45;font-size:13px;}
+  .kj-modal-sentence{font-size:15px;line-height:1.6;color:#1a1a18;}
+  .kj-modal-sentence-m{font-size:13px;color:#6b6b66;margin-top:3px;font-style:italic;}
 </style>
 </head>
 <body>
@@ -338,6 +346,7 @@
     <button class="catbtn warn" data-cat="warn"><span class="dot"></span>警告</button>
     <button class="catbtn guide" data-cat="guide"><span class="dot"></span>案内</button>
     <button class="catbtn shop" data-cat="shop"><span class="dot"></span>お店</button>
+    <button class="catbtn study" data-cat="study"><span class="dot"></span>N5-N3単語</button>
   </div>
 
   <div class="stage">
@@ -382,7 +391,7 @@
     <input type="file" id="importFile" accept="application/json" style="display:none;">
   </div>
 
-  <div class="footnote" id="footnote">習得した単語: 0 / 79</div>
+  <div class="footnote" id="footnote">習得した単語: 0 / 103</div>
 </div>
 
 <div class="kanji-modal" id="kanjiModal">
@@ -470,6 +479,30 @@ const DATA = [
   {k:"お会計はこちら",f:"おかいけいはこちら",m:"Kasir di sini",cat:"shop"},
   {k:"ラストオーダー",f:"ラストオーダー",m:"Pesanan terakhir",cat:"shop"},
   {k:"ペット同伴可",f:"ペットどうはんか",m:"Boleh bawa hewan peliharaan",cat:"shop"},
+  {k:"食べる",f:"たべる",m:"Makan",cat:"study"},
+  {k:"飲む",f:"のむ",m:"Minum",cat:"study"},
+  {k:"見る",f:"みる",m:"Melihat",cat:"study"},
+  {k:"聞く",f:"きく",m:"Mendengar / bertanya",cat:"study"},
+  {k:"話す",f:"はなす",m:"Berbicara",cat:"study"},
+  {k:"読む",f:"よむ",m:"Membaca",cat:"study"},
+  {k:"書く",f:"かく",m:"Menulis",cat:"study"},
+  {k:"買う",f:"かう",m:"Membeli",cat:"study"},
+  {k:"来る",f:"くる",m:"Datang",cat:"study"},
+  {k:"学校",f:"がっこう",m:"Sekolah",cat:"study"},
+  {k:"先生",f:"せんせい",m:"Guru",cat:"study"},
+  {k:"友達",f:"ともだち",m:"Teman",cat:"study"},
+  {k:"家族",f:"かぞく",m:"Keluarga",cat:"study"},
+  {k:"大きい",f:"おおきい",m:"Besar",cat:"study"},
+  {k:"小さい",f:"ちいさい",m:"Kecil",cat:"study"},
+  {k:"古い",f:"ふるい",m:"Lama / tua",cat:"study"},
+  {k:"高い",f:"たかい",m:"Tinggi / mahal",cat:"study"},
+  {k:"安い",f:"やすい",m:"Murah",cat:"study"},
+  {k:"忙しい",f:"いそがしい",m:"Sibuk",cat:"study"},
+  {k:"元気",f:"げんき",m:"Sehat / semangat",cat:"study"},
+  {k:"天気",f:"てんき",m:"Cuaca",cat:"study"},
+  {k:"経験",f:"けいけん",m:"Pengalaman",cat:"study"},
+  {k:"説明",f:"せつめい",m:"Penjelasan",cat:"study"},
+  {k:"到着",f:"とうちゃく",m:"Tiba",cat:"study"},
 ];
 
 const RADICALS = {
@@ -552,9 +585,33 @@ const RADICALS = {
   "お会計はこちら": "会 (orang bertemu) + 計 (kata+sepuluh = menghitung) → tempat bertemu untuk menghitung (bayar)",
   "ラストオーダー": "Kata serapan 'last order' — katakana, tidak ada kanji untuk dipecah",
   "ペット同伴可": "同 (bingkai+mulut = sama) + 伴 (orang+setengah = menemani) + 可 (mulut+丂 = boleh) → boleh menemani bersama-sama",
+  "食べる": "食 (piktograf wadah makanan tertutup) — memakan sesuatu dari wadah",
+  "飲む": "飲 (食 wadah makanan + 欠 membuka mulut lebar) → membuka mulut untuk menikmati isi wadah",
+  "見る": "見 (目 mata + 儿 kaki manusia) → mata yang sedang mengamati sambil berjalan",
+  "聞く": "聞 (門 pintu gerbang + 耳 telinga) → menempelkan telinga ke celah pintu untuk mendengar",
+  "話す": "話 (言 kata-kata + 舌 lidah) → kata-kata yang keluar dari gerakan lidah",
+  "読む": "読 (言 kata-kata + 売 menjual, bentuk fonetik) → menyuarakan kata-kata dengan lantang",
+  "書く": "書 (聿 kuas di tangan + 日 alas terang) → kuas menggoreskan tinta di atas kertas",
+  "買う": "買 (罒 jaring + 貝 uang kerang) → menjaring barang dengan uang",
+  "来る": "来 (piktograf orang membawa hasil panen mendekat) → seseorang yang mendekat",
+  "学校": "学 (冖 atap + 子 anak) + 校 (木 kayu + 交 bersilangan) → bangunan kayu tempat anak-anak saling bertukar ilmu",
+  "先生": "先 (土 kaki + 儿 kaki manusia, melangkah dulu) + 生 (piktograf tunas tumbuh) → orang yang melangkah lebih dulu menumbuhkan ilmu",
+  "友達": "友 (𠂇+又 dua tangan bergandengan) + 達 (辶 berjalan + 幸 beruntung) → berjalan menuju keberuntungan bersama sambil bergandengan tangan",
+  "家族": "家 (宀 atap + 豕 babi) + 族 (方 tiang bendera + 矢 anak panah) → sekelompok orang di bawah satu atap dan satu bendera",
+  "大きい": "大 (piktograf orang merentangkan tangan lebar) — sesuatu yang direntangkan selebar mungkin",
+  "小さい": "小 (piktograf tiga titik kecil) — tiga titik yang berserakan kecil",
+  "古い": "古 (十 sepuluh + 口 mulut) → cerita yang diucapkan turun-temurun selama sepuluh generasi",
+  "高い": "高 (piktograf menara bertingkat) — menara yang menjulang tinggi",
+  "安い": "安 (宀 atap + 女 wanita) → wanita yang duduk tenang karena hidupnya hemat/murah",
+  "忙しい": "忙 (忄 hati + 亡 hilang) → hati yang seolah hilang karena kebanjiran kerjaan",
+  "元気": "元 (二 dua + 儿 kaki manusia) + 気 (气 uap + 米 beras) → tenaga awal yang mengepul dari dalam diri",
+  "天気": "天 (一 garis langit + 大 orang besar) + 気 (气 uap + 米 beras) → uap/kondisi yang menyelimuti langit",
+  "経験": "経 (糸 benang + 巠 aliran bawah tanah) + 験 (馬 kuda + 僉 kumpulan orang) → proses panjang yang diuji seperti menguji kuda bersama-sama",
+  "説明": "説 (言 kata-kata + 兌 senang/melepaskan) + 明 (日 matahari + 月 bulan) → kata-kata yang diungkapkan agar seterang matahari dan bulan",
+  "到着": "到 (至 sampai + 刂 berdiri tegak) + 着 (羊 bentuk atas + 目 mata, menempel) → berhasil sampai dan menempelkan pandangan ke tujuan",
 };
 
-const catNames = {prohibit:"禁止 · larangan", warn:"警告 · peringatan", guide:"案内 · info & petunjuk", shop:"お店 · toko & bisnis"};
+const catNames = {prohibit:"禁止 · larangan", warn:"警告 · peringatan", guide:"案内 · info & petunjuk", shop:"お店 · toko & bisnis", study:"単語 · kosakata N5-N3"};
 const STORAGE_KEY = 'nihongo_street_signs_progress_v1';
 const hasCloudStorage = (typeof window.storage !== 'undefined');
 
@@ -737,7 +794,12 @@ function openKanjiDetail(ch){
     '<div class="kj-modal-section-title">💡 Mnemonik</div>' +
     '<div class="kj-modal-mnemonic">'+d.mn+'</div>' +
     '<div class="kj-modal-section-title">📝 Contoh kata</div>' +
-    '<div class="kj-modal-example"><ruby>'+d.w+'<rt>'+d.r+'</rt></ruby><span class="ex-m">— '+d.wm+'</span></div>';
+    '<div class="kj-modal-example"><ruby>'+d.w+'<rt>'+d.r+'</rt></ruby><span class="ex-m">— '+d.wm+'</span></div>' +
+    (d.sent ? (
+      '<div class="kj-modal-section-title">📖 Contoh kalimat</div>' +
+      '<div class="kj-modal-sentence">'+d.sent+'</div>' +
+      '<div class="kj-modal-sentence-m">'+d.sentM+'</div>'
+    ) : '');
   kanjiModal.classList.add('open');
   document.getElementById('kjModalClose').addEventListener('click', closeKanjiModal);
 }
