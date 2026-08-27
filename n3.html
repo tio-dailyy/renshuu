@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#9f2f2f">
+  <meta name="description" content="Latihan JLPT N3 yang bisa dipasang dan dipakai offline.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="n3-icon.svg">
+  <link rel="stylesheet" href="n3.css">
+  <title>N3 合格ルート</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="index.html"><span class="brand-mark">N3</span><span>合格ルート<small>Renshuu</small></span></a>
+    <div class="top-actions"><span id="saveState" class="save-state">● tersimpan</span><button id="installBtn" class="button ghost" hidden>＋ Install</button></div>
+  </header>
+  <nav class="nav" aria-label="Navigasi utama">
+    <button data-view="home" class="active">Hari ini</button><button data-view="learn">Belajar</button><button data-view="practice">Latihan</button><button data-view="mock">Simulasi</button><button data-view="review">Evaluasi</button>
+  </nav>
+  <main id="app" tabindex="-1"></main>
+  <div id="termSheet" class="sheet" aria-hidden="true"><button class="sheet-backdrop" aria-label="Tutup"></button><section class="sheet-card" role="dialog" aria-modal="true"><button class="sheet-close" aria-label="Tutup">×</button><div id="termContent"></div></section></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="n3-data.js"></script>
+  <script src="n3-app.js"></script>
+</body>
+</html>

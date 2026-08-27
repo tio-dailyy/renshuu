@@ -1,0 +1,14 @@
+{
+  "name": "N3 合格ルート — Renshuu",
+  "short_name": "N3 Renshuu",
+  "description": "Latihan JLPT N3 offline dengan pengulangan berjeda dan simulasi ujian.",
+  "start_url": "./n3.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f0e8",
+  "theme_color": "#9f2f2f",
+  "lang": "id",
+  "icons": [
+    {"src":"n3-icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
